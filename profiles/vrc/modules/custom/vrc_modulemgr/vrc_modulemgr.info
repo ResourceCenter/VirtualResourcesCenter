@@ -1,0 +1,6 @@
+name = vrc_modulemgr
+description = VRC module to manage enabling or disabling modules on distribution updates
+core = 7.x
+package = VRC
+version = 7.x-1.0
+project = vrc

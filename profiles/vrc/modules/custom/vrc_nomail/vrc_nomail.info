@@ -1,0 +1,6 @@
+name = vrc_nomail
+description = VRC custom module to handle or stop email for users in the no email role
+core = 7.x
+package = VRC
+version = 7.x-1.0
+project = vrc

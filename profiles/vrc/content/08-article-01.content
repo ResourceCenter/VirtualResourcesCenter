@@ -1,0 +1,130 @@
+array(
+  (object) array(
+      'vid' => '8',
+      'uid' => '2',
+      'title' => 'Sample Article 1: Journalism, Civil Society and 21st Century Reportage',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '1',
+      'sticky' => '0',
+      'nid' => '8',
+      'type' => 'article',
+      'language' => 'und',
+      'created' => '1339024201',
+      'changed' => '1339024201',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339024201',
+      'revision_uid' => '1',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => "As the failure of many newspapers looms and public radio cuts its journalistic offerings, the complaint against new media by established journalists gets sharper and sharper. The key rallying cry is that new media can’t provide investigative reporting, that it can only piggyback on the work of the mainstream print and radio media, and that when the newspapers go, there goes investigative work and all the civic value it provided.\r\n\r\nAs a starting point in a conversation about the future, this complaint is much more promising that complaining about how people on the Internet are really mean or stupid. It narrows the discussion down to a central function of journalism, the independent investigation of government, industry and society and the delivery of information from such investigation.\r\n\r\nI know that many of the journalists talking along these lines don’t really mean to throw overboard all the other writing (and jobs supported by that writing) that appears within most major newspapers. But I’m going to take it that way: as a concession that much of the rest of the content of 20th Century newspapers is served either equivalently or better by online media. We don’t need newspapers to have film criticism or editorial commentary or consumer analysis of automobiles or comic strips or want ads or public records. It might be that existing online provision of those kinds of information could use serious improvement or has issues of its own. It might be that older audiences don’t know where to find some of that information, or have trouble consuming it in its online form. But there’s nothing that makes published newspapers or radio programming inherently superior at providing any of those functions, and arguably many things that make them quite inferior to the potential usefulness of online media. So throw the columnists and the reviewers and the lifestyle reporters off the newspaper liferaft.\r\n\r\nSo it comes down to independent, sustained investigation of public affairs. The argument that online media cannot provide this function comes down to money, in two respects. First, that doing this kind of work requires an organization that will support the travel and costs necessary to doing this work, that if you want reports from Darfur or Afghanistan or the U.S. Presidential campaign, you’ve got to pay for reporters to travel and live and acquire information, and you’ve got to pay to have an organization that legitimates those reporters so that informational sources will recognize and trust and accredit those reporters. Second, that you’ve got to pay people a living wage for reporters and writers to do this kind of work in a dedicated fashion, that while people might produce short-form criticism of current films or games or TV shows purely out of voluntary interest while making a living at some other job, they are not going to engage in sustained investigatory work for serial or short-form publication without being paid to do so.\r\n\r\nI agree, but let me first pick a few nits before moving to a possible answer to the problem of financial support for reportage.\r\n\r\n1) The key distinction here is “short-form publication”. Longer reportage, at book length, is at least arguably still supported financially by other publishing economies besides newspapers, that consumers will still pay for serious nonfiction and investigative reportage. Arguably a lot of the work appearing at that length is more satisfying and substantial than newspaper journalism, in fact: it doesn’t require savage editing or oversimplification in order to fit within the format of a daily paper. If you were trying to understand the Iraq War as it unfolded, where would you rather turn? The ten to twenty excellent books produced by reporters or the fairly shabby and inconsistent record of daily reportage in mainstream newspapers? It’s true that newspaper jobs underwrote some of the production of those books, but transferring that support onto the book publishing industry doesn’t strike me as impossible.\r\n\r\nMoreover, if we lost at least some short-form reporting, that might be a blessing in disguise. Daily newspapers (and yes, daily blogs) are forced to make many mountains out of molehills precisely because they need to report every day on stories whose development is not necessarily a day-to-day affair. So we get microreadings of tracking polls, parsings of speeches, small leaks blown into gigantic kabuki theater for the amusement of Inside-the-Beltway types, none of which really tells us much about how a story is actually developing. Online media, print media, and television all suffer from this, but maybe if we gave way to longer press cycles and more substantive publication forms, we’d be very well-served.\r\n\r\nStill, some stories do need daily coverage in a short-form manner. Sometimes we can’t wait six months for a book or three months for an article in the Atlantic.\r\n\r\n2) If print journalists want to claim that their saving grace is independent, investigative journalism, they might want to clean house a bit first, because a substantial amount of print journalism doesn’t really live up to that ideal. Getting fed information by a confidential source inside an Administration or inside a business who is using the reporter either to kick a rival in the teeth or as part of a coordinated scheme to float a trial balloon about a hypothetical decision is not independent investigative reporting. It’s a collusive agreement to serve as an unpaid assistant to the public-relations staff of a government or business. Calling a few experts on your Rolodex and plugging them into static paragraphs in an article that otherwise just processes the conventional wisdom of punditry is not independent investigative reporting.\r\n\r\nIf what we want to support is sustained, independent investigation of issues of public concern, we need some new models about how to do that kind of work. A lot of what passes for investigation now isn’t ultimately that different from what online media can provide, and much of that alleged reporting will be reinvented if newspapers pass from the scene. Government officials are still going to try and manipulate information to their advantage even if they don’t do it by leaking to a major urban daily. Industries are going to try to get favorable coverage from seemingly independent sources even if they don’t have a Washington Post or Los Angeles Times to do it through.\r\n\r\nInvestigative reporting, wherever it ends up appearing, needs to tighten up its ethics and to systematize and broaden its methodology. And that effort needs to go in tandem with legislative and governmental reforms: better sunshine laws, more requirements for disclosure and transparency from private businesses and institutions, and so on. Investigative reporting should involve a sustained, deep reading and use of publically available materials, the acquisition of independent technical or expert knowledge about the issues in an investigation, and sustained pressure on publically available sources to speak to the investigation. Ethically it requires a lot of attention to remaining independent. This does not mean balanced in that tedious one-hand other-hand way: a good investigative reporter can have a strong view or sensibility about the subject of their investigation. But they can’t be a shill or mouthpiece for some off-stage interest.\r\n\r\n=======\r\n\r\nThis, I agree, can’t be done for free, or in the spare hours after work. Bloggers mostly are not going to do this kind of work. Short-form investigative reporting appearing in a daily or weekly publication requires a full-time job.\r\n\r\nIf newspapers contract their publication to this alone, can they remain economically viable with more or less the same business model as they have now?\r\n\r\nProbably not. I suspect that after you throw overboard the columnists, reviewers etc. and their editors, you haven’t shed that much of your payroll. You can cut your overhead some, too: get out of that prestige building, concentrate your desks. Maybe create more pooled positions for expensive reportage (foreign, for example) or buy more from stringers and wire services.\r\n\r\nNow you’ve probably lost at least some of your advertisers, who were there for the cultural coverage or the comics pages or something besides the reportage. Probably some of your older customer base is also gone, because that’s all they read too, along with a few of the bleeder-leads in the local news. Maybe you can make some of the lost print advertising revenue back with more extensive online advertising. That works for the top upper wedge of online content providers, so why not daily reportage providers? (The quality of product has to be high, though.)\r\n\r\nLet’s suppose you up your subscriber fees considerably, figuring that your remaining audience of educated readers is willing to pay for high-quality information. Can you make up the difference in lost revenues to make your slimmer, leaner payroll and overhead?\r\n\r\nProbably not, but I’ll bet the difference is in sight at this point. So how to cross the gap? I think with some kind of philanthropic or foundation funding–what we maybe need is an umbrella organization that produces pool reportage with heavy foundation support, an independent endowment, etc., from which daily news outlets buy their content, which provides a revenue stream back to the organization that produces the reportage. Rather than an editorial staff who prunes the reportage produced to a single voice or standard, the goal would be to support multiple reporters working on the same issues whose filed stories could be mixed-and-matched by a news portal or end publication–so we might get a front page of a daily newspaper that would have three bylines on the Obama stimulus package, each the product of a different reporter’s investigative work, if the stories were interesting or well-developed enough.\r\n\r\nThe end of the newspaper model of the last century doesn’t have to be the end of independent investigative reporting. Arguably it might be the beginning of a much better form for it. But I agree that online media as they stand can’t substitute for that vital practice, can’t make up the difference spontaneously, can’t automatically fill in the gap that newspapers will leave as they sink beneath the waves.",
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>As the failure of many newspapers looms and public radio cuts its journalistic offerings, the complaint against new media by established journalists gets sharper and sharper. The key rallying cry is that new media can’t provide investigative reporting, that it can only piggyback on the work of the mainstream print and radio media, and that when the newspapers go, there goes investigative work and all the civic value it provided.</p>\n<p>As a starting point in a conversation about the future, this complaint is much more promising that complaining about how people on the Internet are really mean or stupid. It narrows the discussion down to a central function of journalism, the independent investigation of government, industry and society and the delivery of information from such investigation.</p>\n<p>I know that many of the journalists talking along these lines don’t really mean to throw overboard all the other writing (and jobs supported by that writing) that appears within most major newspapers. But I’m going to take it that way: as a concession that much of the rest of the content of 20th Century newspapers is served either equivalently or better by online media. We don’t need newspapers to have film criticism or editorial commentary or consumer analysis of automobiles or comic strips or want ads or public records. It might be that existing online provision of those kinds of information could use serious improvement or has issues of its own. It might be that older audiences don’t know where to find some of that information, or have trouble consuming it in its online form. But there’s nothing that makes published newspapers or radio programming inherently superior at providing any of those functions, and arguably many things that make them quite inferior to the potential usefulness of online media. So throw the columnists and the reviewers and the lifestyle reporters off the newspaper liferaft.</p>\n<p>So it comes down to independent, sustained investigation of public affairs. The argument that online media cannot provide this function comes down to money, in two respects. First, that doing this kind of work requires an organization that will support the travel and costs necessary to doing this work, that if you want reports from Darfur or Afghanistan or the U.S. Presidential campaign, you’ve got to pay for reporters to travel and live and acquire information, and you’ve got to pay to have an organization that legitimates those reporters so that informational sources will recognize and trust and accredit those reporters. Second, that you’ve got to pay people a living wage for reporters and writers to do this kind of work in a dedicated fashion, that while people might produce short-form criticism of current films or games or TV shows purely out of voluntary interest while making a living at some other job, they are not going to engage in sustained investigatory work for serial or short-form publication without being paid to do so.</p>\n<p>I agree, but let me first pick a few nits before moving to a possible answer to the problem of financial support for reportage.</p>\n<p>1) The key distinction here is “short-form publication”. Longer reportage, at book length, is at least arguably still supported financially by other publishing economies besides newspapers, that consumers will still pay for serious nonfiction and investigative reportage. Arguably a lot of the work appearing at that length is more satisfying and substantial than newspaper journalism, in fact: it doesn’t require savage editing or oversimplification in order to fit within the format of a daily paper. If you were trying to understand the Iraq War as it unfolded, where would you rather turn? The ten to twenty excellent books produced by reporters or the fairly shabby and inconsistent record of daily reportage in mainstream newspapers? It’s true that newspaper jobs underwrote some of the production of those books, but transferring that support onto the book publishing industry doesn’t strike me as impossible.</p>\n<p>Moreover, if we lost at least some short-form reporting, that might be a blessing in disguise. Daily newspapers (and yes, daily blogs) are forced to make many mountains out of molehills precisely because they need to report every day on stories whose development is not necessarily a day-to-day affair. So we get microreadings of tracking polls, parsings of speeches, small leaks blown into gigantic kabuki theater for the amusement of Inside-the-Beltway types, none of which really tells us much about how a story is actually developing. Online media, print media, and television all suffer from this, but maybe if we gave way to longer press cycles and more substantive publication forms, we’d be very well-served.</p>\n<p>Still, some stories do need daily coverage in a short-form manner. Sometimes we can’t wait six months for a book or three months for an article in the Atlantic.</p>\n<p>2) If print journalists want to claim that their saving grace is independent, investigative journalism, they might want to clean house a bit first, because a substantial amount of print journalism doesn’t really live up to that ideal. Getting fed information by a confidential source inside an Administration or inside a business who is using the reporter either to kick a rival in the teeth or as part of a coordinated scheme to float a trial balloon about a hypothetical decision is not independent investigative reporting. It’s a collusive agreement to serve as an unpaid assistant to the public-relations staff of a government or business. Calling a few experts on your Rolodex and plugging them into static paragraphs in an article that otherwise just processes the conventional wisdom of punditry is not independent investigative reporting.</p>\n<p>If what we want to support is sustained, independent investigation of issues of public concern, we need some new models about how to do that kind of work. A lot of what passes for investigation now isn’t ultimately that different from what online media can provide, and much of that alleged reporting will be reinvented if newspapers pass from the scene. Government officials are still going to try and manipulate information to their advantage even if they don’t do it by leaking to a major urban daily. Industries are going to try to get favorable coverage from seemingly independent sources even if they don’t have a Washington Post or Los Angeles Times to do it through.</p>\n<p>Investigative reporting, wherever it ends up appearing, needs to tighten up its ethics and to systematize and broaden its methodology. And that effort needs to go in tandem with legislative and governmental reforms: better sunshine laws, more requirements for disclosure and transparency from private businesses and institutions, and so on. Investigative reporting should involve a sustained, deep reading and use of publically available materials, the acquisition of independent technical or expert knowledge about the issues in an investigation, and sustained pressure on publically available sources to speak to the investigation. Ethically it requires a lot of attention to remaining independent. This does not mean balanced in that tedious one-hand other-hand way: a good investigative reporter can have a strong view or sensibility about the subject of their investigation. But they can’t be a shill or mouthpiece for some off-stage interest.</p>\n<p>=======</p>\n<p>This, I agree, can’t be done for free, or in the spare hours after work. Bloggers mostly are not going to do this kind of work. Short-form investigative reporting appearing in a daily or weekly publication requires a full-time job.</p>\n<p>If newspapers contract their publication to this alone, can they remain economically viable with more or less the same business model as they have now?</p>\n<p>Probably not. I suspect that after you throw overboard the columnists, reviewers etc. and their editors, you haven’t shed that much of your payroll. You can cut your overhead some, too: get out of that prestige building, concentrate your desks. Maybe create more pooled positions for expensive reportage (foreign, for example) or buy more from stringers and wire services.</p>\n<p>Now you’ve probably lost at least some of your advertisers, who were there for the cultural coverage or the comics pages or something besides the reportage. Probably some of your older customer base is also gone, because that’s all they read too, along with a few of the bleeder-leads in the local news. Maybe you can make some of the lost print advertising revenue back with more extensive online advertising. That works for the top upper wedge of online content providers, so why not daily reportage providers? (The quality of product has to be high, though.)</p>\n<p>Let’s suppose you up your subscriber fees considerably, figuring that your remaining audience of educated readers is willing to pay for high-quality information. Can you make up the difference in lost revenues to make your slimmer, leaner payroll and overhead?</p>\n<p>Probably not, but I’ll bet the difference is in sight at this point. So how to cross the gap? I think with some kind of philanthropic or foundation funding–what we maybe need is an umbrella organization that produces pool reportage with heavy foundation support, an independent endowment, etc., from which daily news outlets buy their content, which provides a revenue stream back to the organization that produces the reportage. Rather than an editorial staff who prunes the reportage produced to a single voice or standard, the goal would be to support multiple reporters working on the same issues whose filed stories could be mixed-and-matched by a news portal or end publication–so we might get a front page of a daily newspaper that would have three bylines on the Obama stimulus package, each the product of a different reporter’s investigative work, if the stories were interesting or well-developed enough.</p>\n<p>The end of the newspaper model of the last century doesn’t have to be the end of independent investigative reporting. Arguably it might be the beginning of a much better form for it. But I agree that online media as they stand can’t substitute for that vital practice, can’t make up the difference spontaneously, can’t automatically fill in the gap that newspapers will leave as they sink beneath the waves.</p>\n",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_tags' => array(),
+      'field_image' => array(),
+      'field_sensitivity' => array(),
+      'field_vrc_taxonomy' => array(),
+      'rdf_mapping' => array(
+        'field_image' => array(
+          'predicates' => array(
+            'og:image',
+            'rdfs:seeAlso',
+          ),
+          'type' => 'rel',
+        ),
+        'field_tags' => array(
+          'predicates' => array(
+            'dc:subject',
+          ),
+          'type' => 'rel',
+        ),
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339024201',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '1',
+      'comment_count' => '0',
+      'name' => 'admin',
+      'picture' => '0',
+      'data' => 'b:0;',
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+)

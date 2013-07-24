@@ -1,0 +1,44 @@
+
+.two-50 .region-two-50-second,
+.two-66-33 .region-two-66-33-second,
+.two-33-66 .region-two-33-66-second {
+  float: left;
+}
+
+.three-3x33 .region-three-33-second,
+.three-3x33 .region-three-2-33-second,
+.three-25-25-50 .region-three-25-25-50-second,
+.three-50-25-25 .region-three-50-25-25-second,
+.four-4x25 .region-four-second,
+.five-5x20 .region-five-second,
+.six-6x16 .region-six-second {
+  right: auto;
+  left: -1%;
+}
+.three-3x33 .region-three-33-third,
+.three-3x33 .region-three-2-33-third,
+.three-25-25-50 .region-three-25-25-50-third,
+.three-50-25-25 .region-three-50-25-25-third,
+.four-4x25 .region-four-third,
+.four-4x25 .region-four-2-third,
+.five-5x20 .region-five-third,
+.six-6x16 .region-six-third {
+  right: auto;
+  left: -2%;
+}
+.four-4x25 .region-four-fourth,
+.four-4x25 .region-four-2-fourth,
+.five-5x20 .region-five-fourth,
+.six-6x16 .region-six-fourth {
+  right: auto;
+  left: -3%;
+}
+.five-5x20 .region-five-fifth,
+.six-6x16 .region-six-fifth {
+  right: auto;
+  left: -4%;
+}
+.six-6x16 .region-six-sixth {
+  right: auto;
+  left: -5%;
+}

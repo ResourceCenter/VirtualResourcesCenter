@@ -1,0 +1,839 @@
+array(
+  (object) array(
+      'vid' => '37',
+      'uid' => '4',
+      'title' => 'Keylogging version of anti-censorship software Simurgh found',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '37',
+      'type' => 'article',
+      'language' => 'und',
+      'created' => '1339599587',
+      'changed' => '1339682389',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339682389',
+      'revision_uid' => '9',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => '<p>Simurgh is an Iranian stand-alone proxy software for Microsoft Windows. It has been used mainly by Iranian users to bypass censorship since 2009. The downloadable file is less than 1 MB and can be downloaded within a reasonable amount of time even with a slow internet connection, which makes it convenient for many users in Iran. Simurgh runs without prior installation or administrator privileges on the computer and therefore, can be copied and used from a USB flash drive on any shared computer (i.e Internet cafes).<br><br>Simurgh is available for free download from its official website https://simurghesabz.net. After running the executable file, a user interface (see below) opens. When the user clicks “Start”, Simurgh will attempt to establish a secure connection. The web browser will then open a new window to provide users with a test page, confirming their secure connection originating from a different country.<br><img src="http://citizenlab.org/wp-content/uploads/2012/05/simurgh1.png"><br>It has recently come to our attention that this software is being recommended and circulated among Syrian Internet users for bypassing censorship in their country. This information led to the discovery and analysis of a back-doored version of this software.<br><br>The malicious copy will install the Simurgh software, but will also install an undesirable backdoor on the victim’s computer. This software is distributed as “Simurgh-setup.zip” and is identifiable via the following md5 and sha256 hashes:<br><br>5e2a714fdfc2309af843056e8c5ae7d3 Simurgh-setup.zip<br>9c1a238d87e3bad41708c2e98f753442a224ed9df994e1a34083b2bf336047e5 Simurgh-setup.zip<br><br>When you unzip this file you are presented with Simurgh-setup.exe<br><br>379480c807812f3521466f7ff5ffa273 Simurgh-setup.exe<br>e20438a4cf90b67dab613451cc5b3bc35256413461dafdfc35425429d8d478df Simurgh-setup.exe<br><br>The installer from the most recent legitimate version of Simurgh looks like this:<br><br><img src="http://citizenlab.org/wp-content/uploads/2012/05/simurgh2.png"><br><br>Executing the malicious version starts an installation dialogue which looks like this:<br><br><img src="http://citizenlab.org/wp-content/uploads/2012/05/simurgh3.png"><br><br>In addition to creating a copy of Simurgh in:<br><br>C:\Program Files\Simurgh\Simurgh.exe<br><br>The malicious GUI installer drops 4 binaries in C:\windows\system32\drivers:<br><br>MSINET.OCX – 73da54b69911bdd08ea8bbbd508f815ef7cfa59c4684d75c1c602252ec88ee31<br>richtx32.ocx – 318cc48cbcfaba9592956e4298886823cc5f37626c770d6dadbcd224849680c5<br>shdocvw.dll – fdae6764d190bf265dbc2df352174ccdcc97b1680545e348f1ee1111b0808693<br>lsass.exe – 9320d247dd94f610f31037df8eda75fe79991f126d2e55d35a9532d09ff79896<br><br>The first three files are legitimate Microsoft system files which appear to be dependencies of the fourth, ‘lsass.exe’. This file is VB6 native code and is installed as an implant to allow persistent access to the victim’s computer and to provide data exfiltration capabilities.<br><br>As part of the installation the following registry entry is written which ensures the running of the Trojan on logon:<br><br>HKLM\software\microsoft\windows nt\currentversion\winlogon\shell explorer.exe C:\WINDOWS\system32\drivers\lsass.exe REG_SZ 0<br><br>On startup, ‘lsass.exe’ deletes ‘C:\WINDOWS\Media\Windows XP Start.wav’. This file is the ‘navigation’ sound in Explorer, IE, and other applications based on a common set of controls. Since ‘lsass.exe’ uses several of these controls, this is presumably done to prevent ‘clicking’ sounds during the operation of the implant. However, this will also lead to a lack of navigation sounds in other applications, where they would be expected.<br><br>In addition to ensuring persistence, ‘lsass.exe’ enumerates basic details of the system (IP address, hostname, victim username) and provides keylogging functionality. This binary contains three javascript files which are written out as the text files:<br><br>C:\WINDOWS\system32\win.txt<br>C:\WINDOWS\system32\1.txt<br>C:\WINDOWS\system32\2.txt<br><br>These act as basic HTML templates for data mined from the victim’s system (such as keystrokes). Processing of ‘win.txt’ renames it to ‘upl.htm’ which is then sent via HTTP post request to a remote site registered with a Saudi Arabian ISP.<br><br>If this Trojan is found to be installed on a computer one must consider all online accounts (E-mail, banking, etc.) to have been compromised and it is advised that all online passwords be changed as soon as possible. While this Trojan is detected by most anti-virus software as malicious, AV software cannot always be guaranteed to clean up an infected system and a full re-install is suggested.<br><br>This Trojan has been specifically crafted to target people attempting to evade government censorship. Given the intended purpose of this software, users must be very careful if they have been infected by this Trojan. Additionally, they should be cautious about installing software, especially circumvention software, from untrusted sources. Where possible, software should be downloaded from trusted official websites over HTTPS. If checksums or cryptographic signatures are provided by the software vendor, these should be checked prior to installation.<br><br><br>UPDATED: May 30, 2012<br><br>Since our report was published, the Simurgh team has taken several important steps to warn their users about this threat.<br><br>The Simurgh team warns their users directly on the website https://simurghesabz.net/with a prominent message in Arabic, Farsi and English about the malicious versions of the software.&nbsp; They post MD5 checksums of the official binaries and malicious packages, as well as instructions for how to check MD5 checksums against downloaded software.&nbsp; If you use Simurgh you should immediately compare your installer against the checksums posted on the official site.<br>You can also find these checksums below:<br><br>Official binaries<br>- simurgh120.20100910.exe – 07855ead46bb15718ee73d513bdb9678<br>- simurgh120beta.20100326.exe – ddecf8ac6c96c148cc7c42183d25baa9<br><br>Malicious installer packages<br>- Simurgh-setup.zip – 5e2a714fdfc2309af843056e8c5ae7d3<br>- Simurgh-setup.exe – 379480c807812f3521466f7ff5ffa273<br>- Simurgh-setup.exe – 300b0d061dfb9c9c6d7bdeecc74169f1<br>- simurgh[homs-sin.ibda3.org].exe – c8c8817af66312cfcfcb1ddf952f9d98<br><br>As Sophos has pointed out in a recent blog post on Naked Security http://nakedsecurity.sophos.com/2012/05/29/spying-trojan-targets-iranian-web-surfers-dissidents/, the splash page that loads when Simurgh is initialized to show the users’ IP has been configured to warn users who may be compromised.&nbsp; If you see a warning you should immediately run an antivirus program to remove the software or for greater assurance, reinstall your operating system.<br>In addition to the steps Simurgh has taken, we have made outreach to and notified the provider that was hosting the malicious version of Simurgh and they have now taken down the malicious package.</p><p><img src="http://citizenlab.org/wp-content/uploads/2012/05/simurghcompromised.png"></p><p>&nbsp;</p>',
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>Simurgh is an Iranian stand-alone proxy software for Microsoft Windows. It has been used mainly by Iranian users to bypass censorship since 2009. The downloadable file is less than 1 MB and can be downloaded within a reasonable amount of time even with a slow internet connection, which makes it convenient for many users in Iran. Simurgh runs without prior installation or administrator privileges on the computer and therefore, can be copied and used from a USB flash drive on any shared computer (i.e Internet cafes).<br /><br />Simurgh is available for free download from its official website <a href=\"https://simurghesabz.net\">https://simurghesabz.net</a>. After running the executable file, a user interface (see below) opens. When the user clicks “Start”, Simurgh will attempt to establish a secure connection. The web browser will then open a new window to provide users with a test page, confirming their secure connection originating from a different country.<br /><img src=\"http://citizenlab.org/wp-content/uploads/2012/05/simurgh1.png\" /><br />It has recently come to our attention that this software is being recommended and circulated among Syrian Internet users for bypassing censorship in their country. This information led to the discovery and analysis of a back-doored version of this software.<br /><br />The malicious copy will install the Simurgh software, but will also install an undesirable backdoor on the victim’s computer. This software is distributed as “Simurgh-setup.zip” and is identifiable via the following md5 and sha256 hashes:<br /><br />5e2a714fdfc2309af843056e8c5ae7d3 Simurgh-setup.zip<br />9c1a238d87e3bad41708c2e98f753442a224ed9df994e1a34083b2bf336047e5 Simurgh-setup.zip<br /><br />When you unzip this file you are presented with Simurgh-setup.exe<br /><br />379480c807812f3521466f7ff5ffa273 Simurgh-setup.exe<br />e20438a4cf90b67dab613451cc5b3bc35256413461dafdfc35425429d8d478df Simurgh-setup.exe<br /><br />The installer from the most recent legitimate version of Simurgh looks like this:<br /><br /><img src=\"http://citizenlab.org/wp-content/uploads/2012/05/simurgh2.png\" /><br /><br />Executing the malicious version starts an installation dialogue which looks like this:<br /><br /><img src=\"http://citizenlab.org/wp-content/uploads/2012/05/simurgh3.png\" /><br /><br />In addition to creating a copy of Simurgh in:<br /><br />C:\\Program Files\\Simurgh\\Simurgh.exe<br /><br />The malicious GUI installer drops 4 binaries in C:\\windows\\system32\\drivers:<br /><br />MSINET.OCX – 73da54b69911bdd08ea8bbbd508f815ef7cfa59c4684d75c1c602252ec88ee31<br />richtx32.ocx – 318cc48cbcfaba9592956e4298886823cc5f37626c770d6dadbcd224849680c5<br />shdocvw.dll – fdae6764d190bf265dbc2df352174ccdcc97b1680545e348f1ee1111b0808693<br />lsass.exe – 9320d247dd94f610f31037df8eda75fe79991f126d2e55d35a9532d09ff79896<br /><br />The first three files are legitimate Microsoft system files which appear to be dependencies of the fourth, ‘lsass.exe’. This file is VB6 native code and is installed as an implant to allow persistent access to the victim’s computer and to provide data exfiltration capabilities.<br /><br />As part of the installation the following registry entry is written which ensures the running of the Trojan on logon:<br /><br />HKLM\\software\\microsoft\\windows nt\\currentversion\\winlogon\\shell explorer.exe C:\\WINDOWS\\system32\\drivers\\lsass.exe REG_SZ 0<br /><br />On startup, ‘lsass.exe’ deletes ‘C:\\WINDOWS\\Media\\Windows XP Start.wav’. This file is the ‘navigation’ sound in Explorer, IE, and other applications based on a common set of controls. Since ‘lsass.exe’ uses several of these controls, this is presumably done to prevent ‘clicking’ sounds during the operation of the implant. However, this will also lead to a lack of navigation sounds in other applications, where they would be expected.<br /><br />In addition to ensuring persistence, ‘lsass.exe’ enumerates basic details of the system (IP address, hostname, victim username) and provides keylogging functionality. This binary contains three javascript files which are written out as the text files:<br /><br />C:\\WINDOWS\\system32\\win.txt<br />C:\\WINDOWS\\system32\\1.txt<br />C:\\WINDOWS\\system32\\2.txt<br /><br />These act as basic HTML templates for data mined from the victim’s system (such as keystrokes). Processing of ‘win.txt’ renames it to ‘upl.htm’ which is then sent via HTTP post request to a remote site registered with a Saudi Arabian ISP.<br /><br />If this Trojan is found to be installed on a computer one must consider all online accounts (E-mail, banking, etc.) to have been compromised and it is advised that all online passwords be changed as soon as possible. While this Trojan is detected by most anti-virus software as malicious, AV software cannot always be guaranteed to clean up an infected system and a full re-install is suggested.<br /><br />This Trojan has been specifically crafted to target people attempting to evade government censorship. Given the intended purpose of this software, users must be very careful if they have been infected by this Trojan. Additionally, they should be cautious about installing software, especially circumvention software, from untrusted sources. Where possible, software should be downloaded from trusted official websites over HTTPS. If checksums or cryptographic signatures are provided by the software vendor, these should be checked prior to installation.<br /><br /><br />UPDATED: May 30, 2012<br /><br />Since our report was published, the Simurgh team has taken several important steps to warn their users about this threat.<br /><br />The Simurgh team warns their users directly on the website <a href=\"https://simurghesabz.net/with\">https://simurghesabz.net/with</a> a prominent message in Arabic, Farsi and English about the malicious versions of the software.  They post MD5 checksums of the official binaries and malicious packages, as well as instructions for how to check MD5 checksums against downloaded software.  If you use Simurgh you should immediately compare your installer against the checksums posted on the official site.<br />You can also find these checksums below:<br /><br />Official binaries<br />- simurgh120.20100910.exe – 07855ead46bb15718ee73d513bdb9678<br />- simurgh120beta.20100326.exe – ddecf8ac6c96c148cc7c42183d25baa9<br /><br />Malicious installer packages<br />- Simurgh-setup.zip – 5e2a714fdfc2309af843056e8c5ae7d3<br />- Simurgh-setup.exe – 379480c807812f3521466f7ff5ffa273<br />- Simurgh-setup.exe – 300b0d061dfb9c9c6d7bdeecc74169f1<br />- simurgh[homs-sin.ibda3.org].exe – c8c8817af66312cfcfcb1ddf952f9d98<br /><br />As Sophos has pointed out in a recent blog post on Naked Security <a href=\"http://nakedsecurity.sophos.com/2012/05/29/spying-trojan-targets-iranian-web-surfers-dissidents/\">http://nakedsecurity.sophos.com/2012/05/29/spying-trojan-targets-iranian...</a>, the splash page that loads when Simurgh is initialized to show the users’ IP has been configured to warn users who may be compromised.  If you see a warning you should immediately run an antivirus program to remove the software or for greater assurance, reinstall your operating system.<br />In addition to the steps Simurgh has taken, we have made outreach to and notified the provider that was hosting the malicious version of Simurgh and they have now taken down the malicious package.</p>\n<p><img src=\"http://citizenlab.org/wp-content/uploads/2012/05/simurghcompromised.png\" /></p>\n<p> </p>",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_vrc_taxonomy' => array(
+        'und' => array(
+          array(
+            'tid' => '9',
+          ),
+        ),
+      ),
+      'field_tool' => array(
+        'und' => array(
+          array(
+            'tid' => '72',
+          ),
+        ),
+      ),
+      'field_theme' => array(
+        'und' => array(
+          array(
+            'tid' => '56',
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'field_image' => array(
+          'predicates' => array(
+            'og:image',
+            'rdfs:seeAlso',
+          ),
+          'type' => 'rel',
+        ),
+        'field_tags' => array(
+          'predicates' => array(
+            'dc:subject',
+          ),
+          'type' => 'rel',
+        ),
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339599587',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '4',
+      'comment_count' => '0',
+      'name' => 'qa-admin',
+      'picture' => '0',
+      'data' => NULL,
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+  (object) array(
+      'vid' => '53',
+      'uid' => '9',
+      'title' => 'Best Malware removal',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '53',
+      'type' => 'article',
+      'language' => 'und',
+      'created' => '1339670247',
+      'changed' => '1339670247',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339670247',
+      'revision_uid' => '9',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => "<p>Article on the best malware removal:</p><p>&nbsp;Malwarebytes' Anti-Malware</p><p>Avira</p><p>Clamwin</p><p><img style=\"max-width: 300px;\" class=\"image_4 v10_medium\" title=\"Five Best Malware Removal Tools\" alt=\"Five Best Malware Removal Tools\" src=\"http://cache.gawkerassets.com/assets/images/17/2011/11/medium_622e0e05814385f39486facef2959b42.png\"></p><div class=\"media_embed\">&nbsp;</div><p>&nbsp;</p>",
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>Article on the best malware removal:</p>\n<p> Malwarebytes' Anti-Malware</p>\n<p>Avira</p>\n<p>Clamwin</p>\n<p><img class=\"image_4 v10_medium\" title=\"Five Best Malware Removal Tools\" alt=\"Five Best Malware Removal Tools\" src=\"http://cache.gawkerassets.com/assets/images/17/2011/11/medium_622e0e05814385f39486facef2959b42.png\" /></p>\n \n<p> </p>",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_vrc_taxonomy' => array(
+        'und' => array(
+          array(
+            'tid' => '30',
+          ),
+        ),
+      ),
+      'field_tool' => array(),
+      'field_theme' => array(),
+      'rdf_mapping' => array(
+        'field_image' => array(
+          'predicates' => array(
+            'og:image',
+            'rdfs:seeAlso',
+          ),
+          'type' => 'rel',
+        ),
+        'field_tags' => array(
+          'predicates' => array(
+            'dc:subject',
+          ),
+          'type' => 'rel',
+        ),
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339670247',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '9',
+      'comment_count' => '0',
+      'name' => 'qa-editor',
+      'picture' => '0',
+      'data' => NULL,
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+  (object) array(
+      'vid' => '52',
+      'uid' => '9',
+      'title' => 'Testing media embed',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '52',
+      'type' => 'article',
+      'language' => 'und',
+      'created' => '1339669561',
+      'changed' => '1339669873',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339669873',
+      'revision_uid' => '9',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => '<p>&nbsp;</p><div class="media_embed"><object width="560" height="315"><param name="quality" value="high"><param name="allowScriptAccess" value="always"><param name="movie" value="http://www.youtube.com/v/Z6KZ5KKyvKQ?version=3&amp;hl=en_US&amp;rel=0"><param name="allowscriptaccess" value="always"><embed height="315" type="application/x-shockwave-flash" width="560" src="http://www.youtube.com/v/Z6KZ5KKyvKQ?version=3&amp;hl=en_US&amp;rel=0" quality="high" allowscriptaccess="always"></object></div><p>&nbsp;</p>',
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p> </p>\n\n\n<p> </p>",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_vrc_taxonomy' => array(),
+      'field_tool' => array(),
+      'field_theme' => array(
+        'und' => array(
+          array(
+            'tid' => '56',
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'field_image' => array(
+          'predicates' => array(
+            'og:image',
+            'rdfs:seeAlso',
+          ),
+          'type' => 'rel',
+        ),
+        'field_tags' => array(
+          'predicates' => array(
+            'dc:subject',
+          ),
+          'type' => 'rel',
+        ),
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339669561',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '9',
+      'comment_count' => '0',
+      'name' => 'qa-editor',
+      'picture' => '0',
+      'data' => NULL,
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+  (object) array(
+      'vid' => '51',
+      'uid' => '9',
+      'title' => 'Internet in Iran',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '51',
+      'type' => 'article',
+      'language' => 'und',
+      'created' => '1339668715',
+      'changed' => '1339668760',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339668760',
+      'revision_uid' => '9',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => "<p>Iranians are already used to censors blocking Facebook, Gmail and foreign news sites, and being spied on with surveillance software purchased from Western companies.</p><p>But the ambitious plans would go much further, blocking access to foreign-based social media sites and email. Instead, there will be an Iranian version of Facebook and a new email service, to be called Iran Mail. Users will have to register their home address and social security number with police.</p><p><span style=\"font-family: comic sans ms,cursive;\">The plans have received the backing of the Supreme Leader Ayatollah Ali Khamenei, the most powerful man in Iran, who has denounced the internet as sinful and a means for the West to wage \"soft war\" by invading Iranian culture.</span></p><p>But his real target is anti-regime activists who have relied on the internet since the failure of the \"Green Revolution\" which followed the disputed 2009 election. Since then security has been so tight on Iran's streets that protests are broken up almost as soon as they start.</p><p>When the system, called Halal internet or National Internet by the regime, is introduced this summer only a few approved and carefully monitored businesses and government departments will have access to the World Wide Web. In effect Iran will have a giant, country-wide intranet, with cyber police blocking websites that are not approved.<br>The Iranian regime has been badly shaken by the use made of the internet by its own opponents and then by revolutionaries during the Arab Spring last year.</p><h3 style=\"color: blue;\">In particular mobile phone footage of a young woman called Neda Agha-Soltani, shot dead by government thugs in Tehran in 2009, spread rapidly on the internet, providing a powerful image to the world of the regime's brutality.</h3><p>Amir Bayani, of anti-censorship group Article 19, said: \"The government doesn't want video of another Neda going viral, so controlling the internet is a priority for them.</p><p>\"People rely on the internet for information now. Nobody trusts official government news sources. The only uncensored information comes from blogs and Facebook, and that is under threat.</p><p>\"Businesses are worried the new system may hurt their profits, and I can only hope that their opposition will be enough to shelve these plans.\"</p><p>Source <a href=\"http://www.telegraph.co.uk/news/worldnews/middleeast/iran/9233390/Iran-planning-to-cut-internet-access-to-rest-of-world.html\">http://www.telegraph.co.uk/news/worldnews/middleeast/iran/9233390/Iran-planning-to-cut-internet-access-to-rest-of-world.html</a></p>",
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>Iranians are already used to censors blocking Facebook, Gmail and foreign news sites, and being spied on with surveillance software purchased from Western companies.</p>\n<p>But the ambitious plans would go much further, blocking access to foreign-based social media sites and email. Instead, there will be an Iranian version of Facebook and a new email service, to be called Iran Mail. Users will have to register their home address and social security number with police.</p>\n<p>The plans have received the backing of the Supreme Leader Ayatollah Ali Khamenei, the most powerful man in Iran, who has denounced the internet as sinful and a means for the West to wage \"soft war\" by invading Iranian culture.</p>\n<p>But his real target is anti-regime activists who have relied on the internet since the failure of the \"Green Revolution\" which followed the disputed 2009 election. Since then security has been so tight on Iran's streets that protests are broken up almost as soon as they start.</p>\n<p>When the system, called Halal internet or National Internet by the regime, is introduced this summer only a few approved and carefully monitored businesses and government departments will have access to the World Wide Web. In effect Iran will have a giant, country-wide intranet, with cyber police blocking websites that are not approved.<br />The Iranian regime has been badly shaken by the use made of the internet by its own opponents and then by revolutionaries during the Arab Spring last year.</p>\nIn particular mobile phone footage of a young woman called Neda Agha-Soltani, shot dead by government thugs in Tehran in 2009, spread rapidly on the internet, providing a powerful image to the world of the regime's brutality.\n<p>Amir Bayani, of anti-censorship group Article 19, said: \"The government doesn't want video of another Neda going viral, so controlling the internet is a priority for them.</p>\n<p>\"People rely on the internet for information now. Nobody trusts official government news sources. The only uncensored information comes from blogs and Facebook, and that is under threat.</p>\n<p>\"Businesses are worried the new system may hurt their profits, and I can only hope that their opposition will be enough to shelve these plans.\"</p>\n<p>Source <a href=\"http://www.telegraph.co.uk/news/worldnews/middleeast/iran/9233390/Iran-planning-to-cut-internet-access-to-rest-of-world.html\">http://www.telegraph.co.uk/news/worldnews/middleeast/iran/9233390/Iran-planning-to-cut-internet-access-to-rest-of-world.html</a></p>",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_vrc_taxonomy' => array(
+        'und' => array(
+          array(
+            'tid' => '33',
+          ),
+          array(
+            'tid' => '32',
+          ),
+          array(
+            'tid' => '9',
+          ),
+        ),
+      ),
+      'field_tool' => array(),
+      'field_theme' => array(
+        'und' => array(
+          array(
+            'tid' => '56',
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'field_image' => array(
+          'predicates' => array(
+            'og:image',
+            'rdfs:seeAlso',
+          ),
+          'type' => 'rel',
+        ),
+        'field_tags' => array(
+          'predicates' => array(
+            'dc:subject',
+          ),
+          'type' => 'rel',
+        ),
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339668715',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '9',
+      'comment_count' => '0',
+      'name' => 'qa-editor',
+      'picture' => '0',
+      'data' => NULL,
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+  (object) array(
+      'vid' => '6',
+      'uid' => '1',
+      'title' => 'Sample Article',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '6',
+      'type' => 'article',
+      'language' => 'und',
+      'created' => '1337912266',
+      'changed' => '1339630340',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339630340',
+      'revision_uid' => '4',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>&nbsp;</p>',
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>\n<p> </p>",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_vrc_taxonomy' => array(
+        'und' => array(
+          array(
+            'tid' => '40',
+          ),
+        ),
+      ),
+      'field_tool' => array(
+        'und' => array(
+          array(
+            'tid' => '67',
+          ),
+        ),
+      ),
+      'field_theme' => array(
+        'und' => array(
+          array(
+            'tid' => '57',
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'field_image' => array(
+          'predicates' => array(
+            'og:image',
+            'rdfs:seeAlso',
+          ),
+          'type' => 'rel',
+        ),
+        'field_tags' => array(
+          'predicates' => array(
+            'dc:subject',
+          ),
+          'type' => 'rel',
+        ),
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1337912266',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '1',
+      'comment_count' => '0',
+      'name' => 'admin',
+      'picture' => '0',
+      'data' => 'b:0;',
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+  (object) array(
+      'vid' => '31',
+      'uid' => '4',
+      'title' => 'Article related to Freedom Fone',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '31',
+      'type' => 'article',
+      'language' => 'und',
+      'created' => '1339057730',
+      'changed' => '1339057730',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339057730',
+      'revision_uid' => '4',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => '<p>The LIRNEasia and Sarvodaya conducted feasibility study to integrate the Freedom Fone Interactive Voice Response (IVR) System with the Sahana Disaster Management System was presented at the Communicating with Disaster Affected Communities (CDAC) technology fair. The congregation took place in London, UK, March 22 &amp; 23.</p><p>http://lirneasia.net/wp-content/uploads/2012/03/CDAC-LIRNEasia-FF-case-study.pdf</p><p>In the Freedom Fone version of the case study, Brenda elaborates: “The lessons to date are promising for integrating voice for emergency communication; especially to bridge the last-mile with incident management hubs. Moreover, it is a particularly effective way to enable ICTs for low computer literate non-English working language community-based disaster management organizations in developing countries. Sahana Foundation and Freedom Fone are keen to pursue the integration of the two platforms. If successful, this would position the integrated voice-enabled disaster communication system, for wider adoption, especially, with community-based emergency management and response organisations.”</p>',
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>The LIRNEasia and Sarvodaya conducted feasibility study to integrate the Freedom Fone Interactive Voice Response (IVR) System with the Sahana Disaster Management System was presented at the Communicating with Disaster Affected Communities (CDAC) technology fair. The congregation took place in London, UK, March 22 &amp; 23.</p>\n<p><a href=\"http://lirneasia.net/wp-content/uploads/2012/03/CDAC-LIRNEasia-FF-case-study.pdf\">http://lirneasia.net/wp-content/uploads/2012/03/CDAC-LIRNEasia-FF-case-s...</a></p>\n<p>In the Freedom Fone version of the case study, Brenda elaborates: “The lessons to date are promising for integrating voice for emergency communication; especially to bridge the last-mile with incident management hubs. Moreover, it is a particularly effective way to enable ICTs for low computer literate non-English working language community-based disaster management organizations in developing countries. Sahana Foundation and Freedom Fone are keen to pursue the integration of the two platforms. If successful, this would position the integrated voice-enabled disaster communication system, for wider adoption, especially, with community-based emergency management and response organisations.”</p>",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_vrc_taxonomy' => array(
+        'und' => array(
+          array(
+            'tid' => '1',
+          ),
+          array(
+            'tid' => '28',
+          ),
+        ),
+      ),
+      'field_tool' => array(),
+      'field_theme' => array(),
+      'rdf_mapping' => array(
+        'field_image' => array(
+          'predicates' => array(
+            'og:image',
+            'rdfs:seeAlso',
+          ),
+          'type' => 'rel',
+        ),
+        'field_tags' => array(
+          'predicates' => array(
+            'dc:subject',
+          ),
+          'type' => 'rel',
+        ),
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339057730',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '4',
+      'comment_count' => '0',
+      'name' => 'qa-admin',
+      'picture' => '0',
+      'data' => NULL,
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+)

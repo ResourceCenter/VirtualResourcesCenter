@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the VRC flags feature.
+ */
+
+include_once 'vrc_flags.features.inc';

@@ -1,0 +1,130 @@
+array(
+  (object) array(
+      'vid' => '9',
+      'uid' => '2',
+      'title' => 'Sample Article 2: The Role of Journalists in Democratic Development',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '1',
+      'sticky' => '0',
+      'nid' => '9',
+      'type' => 'article',
+      'language' => 'und',
+      'created' => '1339024308',
+      'changed' => '1339024308',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339024308',
+      'revision_uid' => '1',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => "Worker and human rights activists, trade unionists, government representatives, and NGO representatives gathered in this workshop from multiple countries to discuss the role of journalists in democratic development. When creating conditions to allow journalists to function effectively, it is important to recognize their contribution to democracy and development. Without access to credible and ethical journalism, people are unable to make informed decisions, and corruption, for instance, often remains in place. A vibrant democracy relies on the pluralist participation of all sectors of society, including journalists, and democracy flourishes best when journalists are able to provide civil society with the information they need to formulate informed positions on economic, social, and political matters.\r\n \r\nObservations\r\n \r\nIt is important to look at the situation of journalism in the world today and the changes that are taking place in the way people receive and give out information. In doing so, an examination of the conditions and professional environments that journalists work in is vital. In addition, with the increase in ways in which civil society receives its information, members of civil society are no longer voiceless, but are direct participants. Journalists are becoming more and more involved in moderating, rather than leading, a conversation. To understand the specific role journalism plays is to create an information environment that builds upon democracy. In democracies, people need to be properly informed. They need information that is credible, reliable, and truthful, and they need to know where it comes from. It is not just the quality of journalism, decent wages, and safe working conditions that are at stake, but it is also a matter of ethical journalism.\r\n \r\nParticipants therefore made the following observations:\r\n \r\nIn Latin America, at least 50 percent of journalists are without a working contract and do not work full time; they also do not receive a minimum salary and the majority depend on other forms of income.  For this reason, the quality of journalism is negatively affected.\r\nIn Africa, journalists are constantly working in environments replete with oppression, corruption, violations of press freedom, exploitation, lack of respect and understanding, lack of freedom of expression, lack of job security (one can be fired at any time), and an inability to engage in collective bargaining.\r\nIn Indonesia, the state policy is to ensure freedom of the press, but in reality the policy does not reach all regions of the country as evidenced by acts of violence committed by public officers (police, political leaders, extremist groups, etc.).\r\nIn countries where democracy is still developing, there is a constant threat of fear, intimidation, violence, and insecurity. Many reporters have been killed for reporting on corruption, and there is no rule of law for journalists.\r\nIn many regions of the world, such as in Latin America, where poverty wages are paid and many journalists only get their stories published if they sell advertising to pay for it, press freedom exists in twilight conditions. If journalists want to survive, they must adapt to working simultaneously on all platforms – radio, television, online, and newspaper. They must be skilled experts at all the technical tasks, including climbing the radio mast to repair the transmitter if necessary.\r\nMore experienced journalists work under the threat of losing their jobs to younger, less experienced journalists who are underpaid but have multi-media skills.\r\nLack of respect and ethics is a critical internal professional problem for journalists.\r\nThere are issues of impunity concerning those who violate a journalist’s freedom to report.\r\nExamining ethics and anti-corruption: In many parts of the world, many journalists are resorting to self-censorship, which has a chilling effect because it denies the people’s right to know and weakens the \"watchdog\" role of media in democracy. In addition, pressure inside the media business can be just as destructive to journalism. Poverty wages, bribery, and corruption in the job market are all part of the story in many countries. The struggle for ethical journalism is not made any easier when employers and media managers are dishonest in their political and business affairs and there is little transparency in the ownership of media.\r\nTrade unionism is solidarity based on principles. Unions can defend an individual and assist in her or his defense and safety, build structures for dialogue, and provide important instruments for anti-corruption efforts, such as the \"brown envelope\" model of not accepting bribes for reporting. Unions are also ready to denounce those who attack journalists.\r\nHow do we confront the challenges of building unity among journalists and defend the social and professional rights of journalists where there isn’t a national journalist association? Trade unions are a way to get journalists to work together, and decent working conditions have not prevailed without them.\r\nJournalist unions are also a way to improve the profession. They are based on work and are thus the only journalist organizations with the mentality of a worker. For example, in Indonesia, the union has been instrumental in developing a new culture of unionism within media and is convinced that collective action is the key to eradicating corruption and protecting journalists’ rights.\r\nRecommendations\r\n \r\nThose working in journalism must maintain the integrity of the profession.\r\nCoalitions between civil society and journalism should be developed to help ensure a stronger relationship of engagement.\r\nPromote civil society trust in the media because journalism has traditionally functioned outside of civil society and it is necessary to overcome this obstacle.\r\nBuild coalitions within the journalism world, as well as create new links between independent journalism and civil society to build trust in media.\r\nAnti-corruption campaigns: build a social dialogue inside media management including developing a new relationship with media employers. Raise awareness of the pressures on journalists and need for public support to counter impunity and corruption inside media.\r\nDevelop new accountability systems for journalism to encourage self-rule in journalism, to mediate disputes with media, to advocate better laws and rules governing media, and to lead national campaigns for media literacy and education.\r\nEstablish a framework for social dialogue among media management, government, and unions to provide collective agreements and protections for social rights of journalists and media staff.\r\nCampaign for the rule of law.\r\nChallenge impunity over attacks on journalists, repeal laws that restrict journalism, encourage more investment in training and media literacy, and build respect for public service values so that state-supported media operate independently.\r\nIntroduce programs for media development in all national development strategies to ensure that free expression, freedom of association, public rights to information, and high standards of journalism are made an integral part of economic, social, and democratic development.\r\nPromote ethical and professional journalism.\r\nMonitor the work of media and increase media literacy.\r\nMediate disputes without fear of intimidation or loss of employment.\r\nRaise awareness of threats to journalists among NGOs and donor organizations.\r\n",
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>Worker and human rights activists, trade unionists, government representatives, and NGO representatives gathered in this workshop from multiple countries to discuss the role of journalists in democratic development. When creating conditions to allow journalists to function effectively, it is important to recognize their contribution to democracy and development. Without access to credible and ethical journalism, people are unable to make informed decisions, and corruption, for instance, often remains in place. A vibrant democracy relies on the pluralist participation of all sectors of society, including journalists, and democracy flourishes best when journalists are able to provide civil society with the information they need to formulate informed positions on economic, social, and political matters.</p>\n<p>Observations</p>\n<p>It is important to look at the situation of journalism in the world today and the changes that are taking place in the way people receive and give out information. In doing so, an examination of the conditions and professional environments that journalists work in is vital. In addition, with the increase in ways in which civil society receives its information, members of civil society are no longer voiceless, but are direct participants. Journalists are becoming more and more involved in moderating, rather than leading, a conversation. To understand the specific role journalism plays is to create an information environment that builds upon democracy. In democracies, people need to be properly informed. They need information that is credible, reliable, and truthful, and they need to know where it comes from. It is not just the quality of journalism, decent wages, and safe working conditions that are at stake, but it is also a matter of ethical journalism.</p>\n<p>Participants therefore made the following observations:</p>\n<p>In Latin America, at least 50 percent of journalists are without a working contract and do not work full time; they also do not receive a minimum salary and the majority depend on other forms of income.  For this reason, the quality of journalism is negatively affected.<br />\nIn Africa, journalists are constantly working in environments replete with oppression, corruption, violations of press freedom, exploitation, lack of respect and understanding, lack of freedom of expression, lack of job security (one can be fired at any time), and an inability to engage in collective bargaining.<br />\nIn Indonesia, the state policy is to ensure freedom of the press, but in reality the policy does not reach all regions of the country as evidenced by acts of violence committed by public officers (police, political leaders, extremist groups, etc.).<br />\nIn countries where democracy is still developing, there is a constant threat of fear, intimidation, violence, and insecurity. Many reporters have been killed for reporting on corruption, and there is no rule of law for journalists.<br />\nIn many regions of the world, such as in Latin America, where poverty wages are paid and many journalists only get their stories published if they sell advertising to pay for it, press freedom exists in twilight conditions. If journalists want to survive, they must adapt to working simultaneously on all platforms – radio, television, online, and newspaper. They must be skilled experts at all the technical tasks, including climbing the radio mast to repair the transmitter if necessary.<br />\nMore experienced journalists work under the threat of losing their jobs to younger, less experienced journalists who are underpaid but have multi-media skills.<br />\nLack of respect and ethics is a critical internal professional problem for journalists.<br />\nThere are issues of impunity concerning those who violate a journalist’s freedom to report.<br />\nExamining ethics and anti-corruption: In many parts of the world, many journalists are resorting to self-censorship, which has a chilling effect because it denies the people’s right to know and weakens the \"watchdog\" role of media in democracy. In addition, pressure inside the media business can be just as destructive to journalism. Poverty wages, bribery, and corruption in the job market are all part of the story in many countries. The struggle for ethical journalism is not made any easier when employers and media managers are dishonest in their political and business affairs and there is little transparency in the ownership of media.<br />\nTrade unionism is solidarity based on principles. Unions can defend an individual and assist in her or his defense and safety, build structures for dialogue, and provide important instruments for anti-corruption efforts, such as the \"brown envelope\" model of not accepting bribes for reporting. Unions are also ready to denounce those who attack journalists.<br />\nHow do we confront the challenges of building unity among journalists and defend the social and professional rights of journalists where there isn’t a national journalist association? Trade unions are a way to get journalists to work together, and decent working conditions have not prevailed without them.<br />\nJournalist unions are also a way to improve the profession. They are based on work and are thus the only journalist organizations with the mentality of a worker. For example, in Indonesia, the union has been instrumental in developing a new culture of unionism within media and is convinced that collective action is the key to eradicating corruption and protecting journalists’ rights.<br />\nRecommendations</p>\n<p>Those working in journalism must maintain the integrity of the profession.<br />\nCoalitions between civil society and journalism should be developed to help ensure a stronger relationship of engagement.<br />\nPromote civil society trust in the media because journalism has traditionally functioned outside of civil society and it is necessary to overcome this obstacle.<br />\nBuild coalitions within the journalism world, as well as create new links between independent journalism and civil society to build trust in media.<br />\nAnti-corruption campaigns: build a social dialogue inside media management including developing a new relationship with media employers. Raise awareness of the pressures on journalists and need for public support to counter impunity and corruption inside media.<br />\nDevelop new accountability systems for journalism to encourage self-rule in journalism, to mediate disputes with media, to advocate better laws and rules governing media, and to lead national campaigns for media literacy and education.<br />\nEstablish a framework for social dialogue among media management, government, and unions to provide collective agreements and protections for social rights of journalists and media staff.<br />\nCampaign for the rule of law.<br />\nChallenge impunity over attacks on journalists, repeal laws that restrict journalism, encourage more investment in training and media literacy, and build respect for public service values so that state-supported media operate independently.<br />\nIntroduce programs for media development in all national development strategies to ensure that free expression, freedom of association, public rights to information, and high standards of journalism are made an integral part of economic, social, and democratic development.<br />\nPromote ethical and professional journalism.<br />\nMonitor the work of media and increase media literacy.<br />\nMediate disputes without fear of intimidation or loss of employment.<br />\nRaise awareness of threats to journalists among NGOs and donor organizations.</p>\n",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_tags' => array(),
+      'field_image' => array(),
+      'field_sensitivity' => array(),
+      'field_vrc_taxonomy' => array(),
+      'rdf_mapping' => array(
+        'field_image' => array(
+          'predicates' => array(
+            'og:image',
+            'rdfs:seeAlso',
+          ),
+          'type' => 'rel',
+        ),
+        'field_tags' => array(
+          'predicates' => array(
+            'dc:subject',
+          ),
+          'type' => 'rel',
+        ),
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339024308',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '1',
+      'comment_count' => '0',
+      'name' => 'admin',
+      'picture' => '0',
+      'data' => 'b:0;',
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+)

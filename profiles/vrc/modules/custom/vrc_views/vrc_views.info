@@ -1,0 +1,8 @@
+name = VRC Views
+description = Views plugins for VRC project.
+core = 7.x
+package = VRC
+version = 7.x-1.0
+project = vrc_views
+files[] = includes/views/vrc_views.views.inc
+files[] = includes/views/handlers/vrc_views_handler_relationship_user_latest_message.inc

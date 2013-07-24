@@ -1,0 +1,61 @@
+<?php
+/**
+ * add js
+ */
+function vrc_statistics_init()
+{
+	drupal_add_js(drupal_get_path('module', 'vrc_statistics') . '/vrc_statistics.js');	
+}
+
+/**
+ * ajax server end
+ */
+function vrc_statistics_menu()
+{
+	$items['vrc_statistics/ajax'] = array(
+		'title' => t('record click data'),
+		'page callback' => 'vrc_statistics_add',
+		'type' => MENU_NORMAL_ITEM,
+		'access callback' => true,
+	);
+
+	return $items;
+}
+
+function vrc_statistics_add()
+{
+	global $user, $real_remote_addr_do_not_store;
+
+	// current time
+	$time = time();
+
+	// data
+	$data = array();
+	$data['src_url'] = $_POST['src_url'];
+	$data['dst_url'] = $_POST['dst_url'];
+	$user_hash = $real_remote_addr_do_not_store . '#' . $user->uid . '#' . date('Ymd'); // so only between 00:00 may record more records, but seems small problem
+	$data['user_hash'] = md5($user_hash);
+
+	// get results
+	$result = db_query_range("SELECT * FROM {vrc_statistics} WHERE src_url=? AND dst_url=? AND user_hash=? ORDER BY created DESC", 0, 7, array_values($data));
+	$times = array();
+	foreach($result as $item) {
+		$times[] = $item->created;
+	}
+
+	// check: click same link in 20 secs wont be recorded
+	if (isset($times[0]) && ($times[0] + 20 > $time)) {
+		exit;
+	}
+
+	// check: click same link in 3 min should less than 7 times
+	if (isset($times[6]) && ($times[6] + 180 > $time)) {
+		exit;
+	}
+
+	// insert
+	$data['created'] = $time;
+	db_insert('vrc_statistics')->fields($data)->execute();
+
+	exit;
+}

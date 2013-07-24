@@ -1,0 +1,16 @@
+name = Messaging template
+description = Advanced templating system for messages. Do not enable this module unless other module requires it.
+package = Messaging
+version = VERSION
+core = 7.x
+dependencies[] = messaging
+files[] = messaging_template.inc
+
+
+
+
+; Information added by drush on 2013-01-31
+version = "32e414b"
+project = "messaging"
+datestamp = "1359603871"
+

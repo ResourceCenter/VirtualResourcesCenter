@@ -1,0 +1,105 @@
+<?php
+
+# define ('VRC_FEEDS_IMPORT_BASE_URL', 'http://www.absolutelatitude.com/');
+
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ * These actions were copied from standard_install()
+ * and may not (all) be required for vrc_install().
+ *
+ * @see system_install()
+ */
+function vrc_install() {
+  theme_enable(array('horizon', 'seven'));
+  variable_set('theme_default', 'horizon');
+  variable_set('admin_theme', 'rubik');
+  variable_set('node_admin_theme', 1);
+
+  // Allow visitor account creation without administrative approval.
+  variable_set('user_register', USER_REGISTER_VISITORS);
+
+  // for vrc_set_locale_content()
+  // @see http://drupal.org/node/1231302#comment-5735768
+  variable_set('node_content_enabled', TRUE);
+
+  // Don't display userpoints messages during install.
+  // This is reset in vrc_cleanup_install() for normal operations.
+  variable_set('userpoints_display_message', 0);
+}
+
+/**
+ * Create Default users
+ * @see http://data.agaric.com/providing-default-user-installation-profile-drupal-7
+ */
+function vrc_create_default_users() {
+  // $roles = user_roles(TRUE);
+  $roles = user_roles();
+  // drupal_set_message("<pre>roles=". print_r($roles, true) ."</pre>"); DEBUG
+  if (!in_array(st('editor'), $roles)) {
+    drupal_set_message('vrc_create_default_users: editor role not found', 'error');
+    return;
+  }
+  $rids = array_flip($roles);
+
+  $newuser = array();
+  $newuser['name']   = 'editor';
+  $newuser['mail']   = 'editor@my-vrc.org';
+  $newuser['roles']  = array($rids['editor'] => $rids['editor']);
+  $newuser['pass']   = 'editor.changeme';
+  $newuser['status'] = 1;
+  $account = user_save(drupal_anonymous_user(), $newuser);
+
+  drupal_set_message('vrc_create_default_users: Created editor account', 'status');
+
+  if (!in_array(st('support'), $roles)) {
+    drupal_set_message('vrc_create_default_users: support role not found', 'error');
+    return;
+  }
+  $rids = array_flip($roles);
+
+  $newuser = array();
+  $newuser['name']   = 'support';
+  $newuser['mail']   = 'support@my-vrc.org';
+  $newuser['roles']  = array($rids['support'] => $rids['support']);
+  $newuser['pass']   = 'support.changeme';
+  $newuser['status'] = 1;
+  $account = user_save(drupal_anonymous_user(), $newuser);
+
+  drupal_set_message('vrc_create_default_users: Created support account', 'status');
+}
+
+/**
+ * Save the theme settings
+ */
+function vrc_set_theme_settings() {
+  module_load_include('inc', 'system', 'system.admin');
+  $form_state = array();
+  $form_state['values'] = array('var' => 'theme_horizon_settings');
+  $form_state['build_info']['args'][] = 'horizon';
+  drupal_form_submit('system_theme_settings', $form_state);
+}
+
+function vrc_set_locale_content() {
+  $langcode = language_default('language');
+/*  if ($langcode != 'ar') {
+    $langcode = 'en';
+  }*/
+  $module = 'vrc_default_content_'. $langcode;
+  $filename = drupal_get_filename('module', $module);
+  if ($filename) {
+    $error_reporting = ini_get('error_reporting');
+    ini_set('error_reporting', E_ALL & ~E_NOTICE);
+    module_enable(array($module));
+    ini_set('error_reporting', $error_reporting);
+    drupal_set_message('vrc_set_locale_content: vrc_default_content_'. $langcode .' enabled.');
+  }
+  else {
+    drupal_set_message('vrc_set_locale_content: vrc_default_content_'. $langcode .' not found', 'warning');
+  }
+}
+
+function vrc_cleanup_install() {
+  variable_set('userpoints_display_message', 1);
+}

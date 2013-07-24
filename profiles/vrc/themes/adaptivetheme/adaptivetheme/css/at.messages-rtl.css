@@ -1,0 +1,24 @@
+/* Messages */
+
+#block-system-help {
+  background: #f7f7f7 url(images/help-rtl.png) no-repeat 100% 8px;
+  padding: 10px 50px 10px 10px;
+}
+
+#page .article-unpublished .unpublished,
+#page .comment-unpublished .unpublished {
+  background: url("images/warning.png") no-repeat 100% 7px;
+  padding: 5px 20px 10px 10px;
+}
+div#acquia-agent-no-search {
+  padding-right:3em !important;
+}
+a.block-demo-backlink,
+a.block-demo-backlink:link,
+a.block-demo-backlink:visited {
+  left: auto;
+  right: 50%;
+  margin-left: 0;
+  margin-right: -9em;
+}
+

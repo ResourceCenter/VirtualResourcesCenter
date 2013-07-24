@@ -1,0 +1,117 @@
+array(
+  (object) array(
+      'vid' => '2',
+      'uid' => '2',
+      'title' => 'Welcome to your Virtual Resource Center',
+      'log' => '',
+      'status' => '1',
+      'comment' => '1',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '2',
+      'type' => 'page',
+      'language' => 'und',
+      'created' => '1339019757',
+      'changed' => '1339019757',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339019757',
+      'revision_uid' => '1',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => "This is placeholder text for the home page.\r\n\r\nCollaboratively benchmark backward-compatible markets whereas leading-edge web-readiness. Continually productize optimal web-readiness for team driven \"outside the box\" thinking. Collaboratively provide access to cross-media users rather than distinctive initiatives. Uniquely exploit proactive expertise without next-generation leadership skills. \r\n\r\nEnergistically network real-time products rather than pandemic communities. Dramatically pursue distinctive catalysts for change before intuitive experiences. Credibly administrate client-centered architectures via cutting-edge leadership. Seamlessly administrate performance based expertise rather than process-centric benefits. \r\n\r\nEnergistically drive web-enabled materials via cross-media internal or \"organic\" sources. Energistically formulate excellent process improvements before team building processes. Professionally streamline maintainable scenarios and functionalized alignments. Monotonectally envisioneer integrated supply chains via B2B partnerships. \r\n\r\nCompellingly productivate alternative initiatives vis-a-vis focused benefits. Collaboratively redefine turnkey e-business after cooperative vortals. Completely facilitate wireless interfaces vis-a-vis cost effective action items. Efficiently plagiarize highly efficient architectures rather than flexible value. \r\n\r\nSynergistically disintermediate efficient niches via high standards in markets. Rapidiously impact inexpensive growth strategies for visionary core competencies.",
+            'summary' => '',
+            'format' => 'full_html',
+            'safe_value' => "<p>This is placeholder text for the home page.</p>\n<p>Collaboratively benchmark backward-compatible markets whereas leading-edge web-readiness. Continually productize optimal web-readiness for team driven \"outside the box\" thinking. Collaboratively provide access to cross-media users rather than distinctive initiatives. Uniquely exploit proactive expertise without next-generation leadership skills. </p>\n<p>Energistically network real-time products rather than pandemic communities. Dramatically pursue distinctive catalysts for change before intuitive experiences. Credibly administrate client-centered architectures via cutting-edge leadership. Seamlessly administrate performance based expertise rather than process-centric benefits. </p>\n<p>Energistically drive web-enabled materials via cross-media internal or \"organic\" sources. Energistically formulate excellent process improvements before team building processes. Professionally streamline maintainable scenarios and functionalized alignments. Monotonectally envisioneer integrated supply chains via B2B partnerships. </p>\n<p>Compellingly productivate alternative initiatives vis-a-vis focused benefits. Collaboratively redefine turnkey e-business after cooperative vortals. Completely facilitate wireless interfaces vis-a-vis cost effective action items. Efficiently plagiarize highly efficient architectures rather than flexible value. </p>\n<p>Synergistically disintermediate efficient niches via high standards in markets. Rapidiously impact inexpensive growth strategies for visionary core competencies.</p>\n",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339019757',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '1',
+      'comment_count' => '0',
+      'name' => 'admin',
+      'picture' => '0',
+      'data' => 'b:0;',
+      'path' => array(
+        'pid' => '2',
+        'source' => 'node/2',
+        'alias' => 'front',
+        'language' => 'und',
+      ),
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+)

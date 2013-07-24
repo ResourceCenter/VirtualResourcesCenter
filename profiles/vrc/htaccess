@@ -1,0 +1,20 @@
+#
+# This htaccess file adds *.txt protections and
+# Basic Auth
+
+# Protect files and directories from prying eyes.
+<FilesMatch "\.(engine|inc|info|install|make|module|profile|test|po|sh|.*sql|theme|tpl(\.php)?|xtmpl|svn-base)$|^(CHANGELOG\.txt|COPYRIGHT\.txt|INSTALL\..*\.txt|LICENSE\.txt|MAINTAINERS\.txt|UPGRADE\.txt|code-style\.pl|\..*|Entries.*|Repository|Root|Tag|Template)$">
+  Order allow,deny
+</FilesMatch>
+
+# Basic Auth for development sites
+AuthType Basic
+AuthUserFile /home/clients/websites/w_ieu/.htpasswd
+AuthName "VRC In Development"
+Deny From All
+Require valid-user
+Allow from 64.71.151.84
+Satisfy Any
+
+# Enable the opcode cache
+AddHandler fcgid-script .php

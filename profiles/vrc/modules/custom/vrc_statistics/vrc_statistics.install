@@ -1,0 +1,22 @@
+<?php
+/**
+ * implements hook_schema
+ */
+function vrc_statistics_schema()
+{
+	$schema['vrc_statistics'] = array(
+		'description' => 'basic table for storing records user clicked',
+		'fields' => array(
+			'src_url' => array('type' => 'varchar','description' => 'source url', 'length' => 255,'not null' => TRUE, 'default' => ''),
+			'dst_url' => array('type' => 'varchar','description' => 'destination url', 'length' => 255,'not null' => TRUE, 'default' => ''),
+			'user_hash' => array('type' => 'varchar','description' => 'user hash', 'length' => 32,'not null' => TRUE, 'default' => ''),
+			'created' => array('type' => 'int','description' => 'create time', 'not null' => TRUE, 'default' => 0),
+		),
+		'indexes' => array(
+			'src_dst_user_hash' => array('src_url', 'dst_url', 'user_hash'),
+		),
+	);
+
+	return $schema;
+}
+

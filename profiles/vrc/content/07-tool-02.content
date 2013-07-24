@@ -1,0 +1,162 @@
+array(
+  (object) array(
+      'vid' => '7',
+      'uid' => '2',
+      'title' => 'Google Fusion Tables',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '1',
+      'sticky' => '0',
+      'nid' => '7',
+      'type' => 'tool',
+      'language' => 'und',
+      'created' => '1339024071',
+      'changed' => '1339024071',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339024071',
+      'revision_uid' => '1',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => "<p><strong style=\"font-family: arial, sans-serif; line-height: 20px; text-align: left; color: rgb(0, 0, 0); \">Import your own data</strong></p><p style=\"margin: 10px 0px; font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><font color=\"#444444\">Upload data tables from spreadsheets or CSV files, even KML. Developers can use the&nbsp;</font><a href=\"http://code.google.com/apis/fusiontables/\" style=\"color: rgb(0, 0, 204); \">Fusion Tables API</a><font color=\"#444444\">&nbsp;to insert, update, delete and query data programmatically. You can export your data as CSV or KML too.</font></p><p style=\"margin: 10px 0px; color: rgb(68, 68, 68); font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><strong style=\"color: rgb(0, 0, 0); \">Visualize it instantly</strong><br>See the data on a map or as a chart immediately. Use filters for more selective visualizations.</p><p style=\"margin: 10px 0px; color: rgb(68, 68, 68); font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><strong style=\"color: rgb(0, 0, 0); \">Publish your visualization on other web properties</strong><br>Now that you've got that nice map or chart of your data, you can embed it in a web page or blog post. Or send a link by email or IM. It will always display the latest data values from your table and helps you communicate your story more easily.</p>",
+            'summary' => '',
+            'format' => 'full_html',
+            'safe_value' => "<p><strong style=\"font-family: arial, sans-serif; line-height: 20px; text-align: left; color: rgb(0, 0, 0); \">Import your own data</strong></p>\n<p style=\"margin: 10px 0px; font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><font color=\"#444444\">Upload data tables from spreadsheets or CSV files, even KML. Developers can use the </font><a href=\"http://code.google.com/apis/fusiontables/\" style=\"color: rgb(0, 0, 204); \">Fusion Tables API</a><font color=\"#444444\"> to insert, update, delete and query data programmatically. You can export your data as CSV or KML too.</font></p>\n<p style=\"margin: 10px 0px; color: rgb(68, 68, 68); font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><strong style=\"color: rgb(0, 0, 0); \">Visualize it instantly</strong><br />See the data on a map or as a chart immediately. Use filters for more selective visualizations.</p>\n<p style=\"margin: 10px 0px; color: rgb(68, 68, 68); font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><strong style=\"color: rgb(0, 0, 0); \">Publish your visualization on other web properties</strong><br />Now that you've got that nice map or chart of your data, you can embed it in a web page or blog post. Or send a link by email or IM. It will always display the latest data values from your table and helps you communicate your story more easily.</p>\n",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_date_of_last_release' => array(
+        'und' => array(
+          array(
+            'value' => '2012-02-21T07:00:00',
+            'timezone' => 'America/Denver',
+            'timezone_db' => 'UTC',
+            'date_type' => 'date',
+          ),
+        ),
+      ),
+      'field_features' => array(
+        'und' => array(
+          array(
+            'value' => "<p>&nbsp;</p><p style=\"margin: 10px 0px; color: rgb(68, 68, 68); font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><strong style=\"color: rgb(0, 0, 0); \">Turn location tables into maps</strong><br>Points, lines, polygons, customer addresses, placenames, countries and more can be mapped in minutes with Fusion Tables. Columns with location data are automatically interpreted.</p><p style=\"margin: 10px 0px; color: rgb(68, 68, 68); font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><strong style=\"color: rgb(0, 0, 0); \">Find the story in your data</strong><br>Apply colors or icons based on your data. Make an intensity map for countries, states or provinces. Use KML polygons to make custom intensity maps. Show a heat map of point locations. Display thousands of trails at one time. It's easy to turn a datafile into a map that tells the story visually.</p><p style=\"margin: 10px 0px; color: rgb(68, 68, 68); font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><strong style=\"color: rgb(0, 0, 0); \">Share that map!</strong><br>Embed it in a blog, send collaborators a link, save it as a KML file to view in Google Earth, or even take advantage of Fusion Tables to host your dynamic KML link so collaborators will always see the latest mapped data</p>",
+            'format' => 'full_html',
+            'safe_value' => "<p> </p>\n<p style=\"margin: 10px 0px; color: rgb(68, 68, 68); font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><strong style=\"color: rgb(0, 0, 0); \">Turn location tables into maps</strong><br />Points, lines, polygons, customer addresses, placenames, countries and more can be mapped in minutes with Fusion Tables. Columns with location data are automatically interpreted.</p>\n<p style=\"margin: 10px 0px; color: rgb(68, 68, 68); font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><strong style=\"color: rgb(0, 0, 0); \">Find the story in your data</strong><br />Apply colors or icons based on your data. Make an intensity map for countries, states or provinces. Use KML polygons to make custom intensity maps. Show a heat map of point locations. Display thousands of trails at one time. It's easy to turn a datafile into a map that tells the story visually.</p>\n<p style=\"margin: 10px 0px; color: rgb(68, 68, 68); font-family: arial, sans-serif; line-height: 20px; text-align: left; \"><strong style=\"color: rgb(0, 0, 0); \">Share that map!</strong><br />Embed it in a blog, send collaborators a link, save it as a KML file to view in Google Earth, or even take advantage of Fusion Tables to host your dynamic KML link so collaborators will always see the latest mapped data</p>\n",
+          ),
+        ),
+      ),
+      'field_platform' => array(
+        'und' => array(
+          array(
+            'value' => '<p>Web</p>',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>Web</p>\n",
+          ),
+        ),
+      ),
+      'field_release_notes' => array(),
+      'field_sensitivity' => array(),
+      'field_sponsoring_organization' => array(
+        'und' => array(
+          array(
+            'url' => 'http://google.com',
+            'title' => 'Google',
+            'attributes' => array(),
+          ),
+        ),
+      ),
+      'field_vrc_taxonomy' => array(),
+      'field_website' => array(
+        'und' => array(
+          array(
+            'url' => 'http://www.google.com/fusiontables/public/tour/index.html',
+            'title' => 'Google Fusion Tables',
+            'attributes' => array(),
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339024071',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '1',
+      'comment_count' => '0',
+      'name' => 'admin',
+      'picture' => '0',
+      'data' => 'b:0;',
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+)

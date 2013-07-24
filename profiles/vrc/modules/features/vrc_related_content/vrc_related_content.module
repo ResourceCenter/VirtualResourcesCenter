@@ -1,0 +1,108 @@
+<?php
+/**
+ * @file
+ * Code for the vrc_related_content feature.
+ */
+
+include_once 'vrc_related_content.features.inc';
+
+/**
+ * Implements hook_block_info()
+ */
+function vrc_related_content_block_info() {
+  return array(
+    'tool_available_res' => array(
+      'info' => t('Available resource for this tool'),
+      'cache' => DRUPAL_NO_CACHE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_view()
+ *
+ * @todo: a little complex to do this in the views, replace with views later
+ */
+function vrc_related_content_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'tool_available_res':
+      $block['subject'] = t('Available resource for this tool');
+      $node = menu_get_object();
+      $content = NULL;
+      if ($node->type == 'documentation' && $node->sticky) {
+        $content = vrc_related_content_get_tool_related_ques_and_doc($node);
+      }
+      $block['content'] = $content;
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Get the related document
+ * @see: node_page_default()
+ * XXX: It will be good if this block can be configurable.
+ */
+function vrc_related_content_get_tool_related_ques_and_doc($node) {
+  if (is_numeric($node)) {
+    $node = node_load($node);
+  }
+
+  // Get the tool terms this `tool` node have
+  $tool_tids = array();
+  $tool_items= field_get_items('node', $node, 'field_tool');
+  foreach ($tool_items as $item) {
+    if (!empty($item['tid'])) {
+      $tool_tids[] = $item['tid'];
+    }
+  }
+
+  // Get the and documentation nodes that have the with same term
+  if (!empty($tool_tids)) {
+    $query = new EntityFieldQuery();
+    $query
+      ->entityCondition('entity_type', 'node')
+      // for `documentation` type, `sticky` attribute should be FALSE
+      // Exclude itself
+      ->propertyCondition('nid', $node->nid, '<>')
+      ->fieldCondition('field_tool', 'tid', $tool_tids, 'IN')
+      // Note: For the condition either type question or documentation is done
+      // in the  `vrc_related_content_query_related_content_alter`, for the
+      // EntityFieldQuery doesn't support OR condition
+      ->addTag('related_content');
+    $query->pager(25);
+    $related_doc_result = $query->execute();
+
+    if (!empty($related_doc_result)) {
+      $related_doc_nids = array_keys($related_doc_result['node']);
+    }
+
+    $build['node'] = node_view_multiple(node_load_multiple($related_doc_nids));
+    $build['pager']['#markup'] = theme('pager', $query->pager);
+
+    $output = render($build);
+    return $output;
+  }
+}
+
+/**
+ * Implements hook hook_query_TAG_alter()
+ * @see: EntityFieldQuery::addTag()
+ * Note: The passed-in $query is a 'SelectQuery'
+ */
+function vrc_related_content_query_related_content_alter(QueryAlterableInterface $query) {
+  if ($query instanceof SelectQuery) {
+    // Select either 'Documentation' or 'Question'
+    $question_or_doc = db_or();
+    $documentation_type = db_and();
+    $documentation_type->condition('node.type', 'documentation', '=');
+    $documentation_type->condition('node.sticky', 0, '=');
+    $question_or_doc->condition($documentation_type);
+    $question_or_doc->condition('node.type', 'question', '=');
+    $query->condition($question_or_doc);
+
+    // Sort by time changed, desc
+    $query->orderBy('node.changed', 'DESC');
+  }
+}

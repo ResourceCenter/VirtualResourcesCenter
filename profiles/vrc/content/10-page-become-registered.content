@@ -1,0 +1,112 @@
+array(
+  (object) array(
+      'vid' => '32',
+      'uid' => '1',
+      'title' => 'Become a registered user',
+      'log' => '',
+      'status' => '1',
+      'comment' => '1',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '32',
+      'type' => 'page',
+      'language' => 'und',
+      'created' => '1339101946',
+      'changed' => '1339102045',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339102045',
+      'revision_uid' => '1',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => '<p>Becoming a registered user on this site allows you to ask questions, provide answers, view content that is not visible to anonymous users, and to vote on the relevance of various posts.</p><p>If you wish to have full privileges, <a href="/user/register">you must register with a valid email address here.</a></p><p>If you want to remain anonymous, but also be a registered user, <a href="/profiles/vrc/files/anon.php">you may register here.</a></p>',
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>Becoming a registered user on this site allows you to ask questions, provide answers, view content that is not visible to anonymous users, and to vote on the relevance of various posts.</p>\n<p>If you wish to have full privileges, <a href=\"/user/register\">you must register with a valid email address here.</a></p>\n<p>If you want to remain anonymous, but also be a registered user, <a href=\"/profiles/vrc/files/anon.php\">you may register here.</a></p>",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339101946',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '1',
+      'comment_count' => '0',
+      'name' => 'admin',
+      'picture' => '0',
+      'data' => 'b:0;',
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+)

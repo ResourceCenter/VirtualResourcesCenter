@@ -1,0 +1,12 @@
+name = Messaging simple mail
+description = Mail Sending Method: Integration with Drupal mail API
+package = "Messaging"
+dependencies[] = messaging
+core = 7.x
+files[] = messaging_mail.inc
+
+; Information added by drush on 2013-01-31
+version = "32e414b"
+project = "messaging"
+datestamp = "1359603871"
+

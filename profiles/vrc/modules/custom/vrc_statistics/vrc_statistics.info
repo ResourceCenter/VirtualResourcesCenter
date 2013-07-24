@@ -1,0 +1,6 @@
+name = VRC Statistics
+description = counting user accessing external links
+core = 7.x
+package = VRC
+version = 7.x-0.1
+project = vrc_statistics

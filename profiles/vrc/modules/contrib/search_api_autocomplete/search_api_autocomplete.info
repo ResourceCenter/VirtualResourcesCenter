@@ -1,0 +1,14 @@
+name = Search API autocomplete
+description = "Adds autocomplete functionality to most searches on servers supportings this feature."
+dependencies[] = search_api
+core = 7.x
+package = Search
+
+files[] = search_api_autocomplete.entity.php
+
+
+; Information added by drush on 2013-01-08
+version = "e320907"
+project = "search_api_autocomplete"
+datestamp = "1357618338"
+

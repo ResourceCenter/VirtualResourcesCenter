@@ -1,0 +1,180 @@
+<?php
+
+define('VSDG_DATE_FORMAT_DEFAULT', 'Y-m-d H:i:s');
+
+/**
+ * Pick a random user from the system
+ *
+ * @return
+ *   A loaded user object
+ */
+function vsdg_get_random_user() {
+  $query = db_select('users', 'u');
+  $query->condition('u.uid', 0, '<>');
+  $query = $query->extend('PagerDefault');
+  $query
+    ->fields('u', array('uid'))
+    ->limit(100);
+
+  $query->execute();
+  $result = $query->execute()->fetchCol();
+
+  $uid = $result[array_rand($result)];
+  $user = user_load($uid);
+  return $user;
+}
+
+/**
+ * Pick a random node
+ */
+function vsdg_get_random_node($type) {
+  $types = node_type_get_types();
+
+  if (empty($types) || !array_key_exists($type, $types) ) {
+    return drush_set_error('UNKNOWN CONTENT TYPE', dt('Unrecognized content type.'));
+  }
+
+  // Drupal doesn't have a good interface to fetch a random row
+  $result = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', $type)
+    ->condition('status', 1)
+    ->execute()
+    ->fetchCol();
+
+  if (!empty($result)) {
+    $random_nid = $result[array_rand($result)];
+    $node = node_load($random_nid);
+    return $node;
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_node_insert()
+ * @see: devel_generate_node_insert()
+ */
+function vsdg_node_insert($node) {
+  $custom_date_format = 'Y-m-d H:i:s';
+
+  if (!isset($node->devel_generate) && !isset($node->vsdg_generate)) {
+    return;
+  }
+  $results = $node->devel_generate;
+
+  if ($node->type == 'answer') {
+    if ($node->vsdg_generate_answer || $node->vsdg_generate_resolved_question_answer) {
+      drush_print(dt('Created an answer: "@title" [Node nid: @nid; Published time: @created; Author uid: @uid]',
+        array('@title' => $node->title, '@nid' => $node->nid, '@created' => format_date($node->created, 'custom', $custom_date_format), '@uid' => $node->uid)), 4);
+    }
+  }
+  elseif ($node->type == 'article') {
+    if (!empty($results['vsdg_generate_article'])) {
+      drush_print(dt('Created an article: "@title" [Node nid: @nid; Published time: @created; Author uid: @uid]',
+        array('@title' => $node->title, '@nid' => $node->nid, '@created' => format_date($node->created, 'custom', $custom_date_format), '@uid' => $node->uid)), 4);
+    }
+  }
+  elseif ($node->type == 'question') {
+    drush_print(dt('Created a quesiton: @title [Node nid: @nid; Published time: @created; Author uid: @uid]',
+      array('@title' => $node->title, '@nid' => $node->nid, '@created' => format_date($node->created, 'custom', $custom_date_format), '@uid' => $node->uid)), 4);
+
+    // If we are creating a quesiton that has been resolved
+    // Then we need to set the best answer field here.
+    //
+    // First, create some answers for this question,
+    //   - the created time of which should be between the question created
+    //     timestamp and REQUEST_TIME;
+    //   - the author of which shouldn't be the question author(optional?);
+    // Second, pick an answer among the created answers as the best answer,
+    // and use it to update the 'field_best_answer'
+
+    // An container to gather all the populated answers for this question
+    $answer_nids = array();
+
+    // Decide the language code we are gonna use for the answer and its fields
+    $default_lang_code = language_default('language');
+    $lang_code =  $default_lang_code == 'en' ? LANGUAGE_NONE : $default_lang_code;
+    if ($results['vsdg_generate_resolved_question']) {
+      $answer_num = mt_rand(1, 5);
+      for($i = 1; $i <= $answer_num; $i++) {
+        $ans_node = new stdClass();
+        $ans_node->nid = NULL;
+        node_object_prepare($ans_node);
+        $ans_node->type = 'answer';
+        $ans_node->language = $lang_code;
+        $ans_node->uid = vsdg_get_random_user()->uid;
+        $ans_node->title = '';
+        $ans_node->created = mt_rand($node->created, REQUEST_TIME) ? mt_rand($node->created, REQUEST_TIME) : 60;
+        // Question field
+        $ans_node->field_answer_question[$lang_code][] = array('nid' => $node->nid);
+        // Answer body field
+        $field = field_info_field('field_answer_body');
+        $field_instance = field_info_instance('node', 'field_answer_body', 'answer');
+        $ans_node->field_answer_body[$lang_code][] = text_devel_generate($ans_node, $field, $field_instance, $bundle);
+        $ans_node->vsdg_generate_resolved_question_answer = TRUE;
+        $ans_node->vsdg_generate = TRUE;
+        node_save($ans_node);
+
+        if (!empty($ans_node->nid)) {
+          $answer_nids[] = $ans_node->nid;
+        }
+      }
+
+      // Assign a random answer as the best answer
+      if (count($answer_nids)) {
+        $best_answer_nid = $answer_nids[array_rand($answer_nids)];
+        $node->field_best_answer[$lang_code] = array(array('nid' => $best_answer_nid));
+        field_attach_presave('node', $node);
+        field_attach_update('node', $node);
+
+        drush_print(dt('Answer @nid is chosen as the best answer.', array('@nid' => $best_answer_nid)), 4);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_attach_update()
+ */
+function vsdg_field_attach_update($entity_type, $entity) {
+  if ($entity_type == 'node') {
+    if ($entity->type == 'question') {
+      if (!empty($entity->devel_generate) && !empty($entity->devel_generate['vsdg_generate_resolved_question'])) {
+        $node = node_load($entity->nid);
+        if (!empty($entity->field_best_answer) && empty($node->field_best_answer)) {
+          // Also check this is the first to log this event
+          $loaded_message = vrc_statistics_dashboard_load_message_question_gets_resolved_by_question($entity->nid);
+          if ($loaded_message) {
+            $message = $loaded_message;
+          }
+          else {
+            $message = message_create('question_gets_resolved');
+          }
+
+          $now = REQUEST_TIME;
+          $random_resolved_time = mt_rand($node->created, $now);
+          $duration = abs($random_resolved_time - $node->created);
+
+          $wrapper = entity_metadata_wrapper('message', $message);
+          $wrapper->field_message_question->set($node);
+          $wrapper->field_question_resolved_time->set($random_resolved_time);
+          $wrapper->field_duration->set($duration);
+          $wrapper->save();
+
+          drush_print(dt('A \'question_gets_resolved\' message created [resolved at: !r_time, duration: !duration]', array(
+            '!r_time' => format_date($random_resolved_time, 'custom', VSDG_DATE_FORMAT_DEFAULT), '!duration' => format_interval($duration))), 4);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_user_insert()
+ */
+function vsdg_user_insert(&$edit, $account, $category) {
+  if (!empty($account->devel_generate) && function_exists('drush_print')) {
+    drush_print(dt("User @name created \t [created: @created]\t", array(
+      '@name' => $account->name, '@created' => format_date($account->created, 'custom', VSDG_DATE_FORMAT_DEFAULT))), 4);
+  }
+}

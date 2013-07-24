@@ -1,0 +1,22 @@
+# Tamil, Sri Lanka translation of Pixture Reloaded (7.x-3.0-rc1)
+# Copyright (c) 2012 by the Tamil, Sri Lanka translation team
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Pixture Reloaded (7.x-3.0-rc1)\n"
+"POT-Creation-Date: 2012-07-31 06:52+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Language-Team: Tamil, Sri Lanka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "none"
+msgstr "இல்லை"
+msgid "Help"
+msgstr "உதவி"
+msgid "Header top"
+msgstr "மேல் தலையொட்டு"
+msgid "Header bottom"
+msgstr "கீழ் தலையொட்டு"

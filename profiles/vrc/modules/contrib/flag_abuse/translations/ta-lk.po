@@ -1,0 +1,22 @@
+# Tamil, Sri Lanka translation of Flag Abuse (7.x-2.0-alpha1)
+# Copyright (c) 2012 by the Tamil, Sri Lanka translation team
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Flag Abuse (7.x-2.0-alpha1)\n"
+"POT-Creation-Date: 2012-11-08 21:02+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Language-Team: Tamil, Sri Lanka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "Author"
+msgstr "எழுத்தாளர்"
+msgid "more"
+msgstr "மேலும்"
+msgid "Node"
+msgstr "கணு"
+msgid "Page"
+msgstr "பக்கம்"

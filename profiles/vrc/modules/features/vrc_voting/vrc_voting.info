@@ -1,0 +1,16 @@
+name = VRC Voting
+description = Functions used to create the voting/rate widgets
+core = 7.x
+package = VRC
+php = 5.2.4
+version = 7.x-1.0
+project = vrc_voting
+dependencies[] = rate
+dependencies[] = strongarm
+dependencies[] = votingapi
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[variable][] = rate_widgets
+features[variable][] = votingapi_anonymous_window
+features[variable][] = votingapi_calculation_schedule
+features[variable][] = votingapi_last_cron

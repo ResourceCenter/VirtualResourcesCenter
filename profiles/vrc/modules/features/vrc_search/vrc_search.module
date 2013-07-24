@@ -1,0 +1,197 @@
+<?php
+/**
+ * @file
+ * Code for the vrc_search feature.
+ */
+
+include_once 'vrc_search.features.inc';
+
+/**
+ * Implements hook_entity_info_alter()
+ */
+function vrc_search_entity_info_alter(&$entity_info) {
+  // Add a custom display mode
+  $entity_info['node']['view modes']['search_teaser'] = array(
+    'label' => 'Search Teaser',
+    'custom settings' => FALSE,
+  );
+}
+
+/**
+ * Implements hook_search_api_solr_search_results_alter()
+ *
+ * @link http://drupal.org/node/1155056 [Normalising relevance]
+ */
+function vrc_search_search_api_solr_search_results_alter(array &$results, SearchApiQueryInterface $query, Apache_Solr_Response $response) {
+  $search_id = $query->getOption('search id');
+  if ($search_id == 'search_api_views:site_search:page') {
+    $results['max_score'] = $response->response->maxScore;
+  }
+}
+
+/**
+ * Implements hook_search_api_solr_query_alter()
+ * @see: http://wiki.apache.org/solr/DisMaxQParserPlugin
+ */
+function vrc_search_search_api_solr_query_alter(array &$call_args, SearchApiQueryInterface $query) {
+}
+
+/**
+ * Implements hook_search_api_query_alter()
+ * @see: search_api_facetapi_search_api_query_alter()
+ * @see: SearchApiQuery::preExecute()
+ */
+function vrc_search_search_api_query_alter($query) {
+
+}
+
+/**
+ * Implements hook_entity_view()
+ */
+function vrc_search_entity_view($entity, $type, $view_mode, $langcode) {
+  // Don't display the flag widgets in search teaser
+  // @see: flag_entity_view()
+  if ($type == 'node' && $view_mode == 'search_teaser') {
+    if (!empty($entity->content['links']['flag'])) {
+      unset($entity->content['links']['flag']);
+    }
+  }
+}
+
+/**
+ * Implements hook_node_view()
+ */
+function vrc_search_node_view($node, $view_mode, $langcode) {
+  if ($view_mode == 'search_teaser') {
+    // Add number of likes
+    // @todo: This shouldn't be a link most likely
+    $likes_count = vrc_voting_get_count_of_likes_of_node($node);
+    if ($likes_count) {
+      $text = format_plural($likes_count, '1 like', '@count likes');
+    }
+    else {
+      $text = t('No like');
+    }
+    $node->content['links']['no_of_likes'] = array(
+      '#theme' => 'link',
+      '#text' => $text,
+      '#path' => '',
+      '#options' => array(
+        'attributes' => array('class' => array('no-of-likes')),
+        'html' => TRUE,
+      )
+    );
+
+    // Add answer count for question
+    if ($node->type == 'question') {
+      $answer_count = vrc_answers_get_answers_count($node->nid);
+      if (!empty($answer_count)) {
+        $text = format_plural($answer_count, '1 answer', '@count answers');
+      }
+      else {
+        $text = t('no answer');
+      }
+      $node->content['links']['answer_count'] = array(
+        '#theme' => 'link',
+        '#text' => $text,
+        '#path' => 'node/' . $node->nid,
+        '#options' => array(
+          'attributes' => array('class' => array('answer-count')),
+          'html' => TRUE,
+          'fragment' => !empty($answer_count) ? 'question_answers_section' : 'add_your_answer',
+        )
+      );
+    }
+    // For question, add an answer count (link to the the answer section)
+  }
+}
+
+/**
+ * Implements hook_preprocess_node()
+ */
+function vrc_search_preprocess_node(&$vars) {
+  // Don't display the submitted information in search teaser
+  if ($vars['view_mode'] == 'search_teaser') {
+    $vars['display_submitted'] = FALSE;
+  }
+}
+
+/**
+ * Implement hook_menu()
+ */
+function vrc_search_menu() {
+  $items['admin/config/search/search_api/index/%search_api_index/vrc_facets'] = array(
+    'title' => 'Vrc Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('vrc_search_search_api_facetapi_views_settings', 5),
+    'access arguments' => array('administer search_api'),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+  $items['admin/config/search/search_api/index/%search_api_index/vrc_facets/blacklist'] = array(
+    'title' => 'Blacklist',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  return $items;
+}
+
+function vrc_search_search_api_facetapi_views_settings($form, $form_state, SearchApiIndex $index) {
+  $form = array();
+  $table = 'search_api_index_' . $index->machine_name;
+  $index_views = array();
+  foreach (views_get_all_views() as $name => $view) {
+    if (empty($view->disabled) && $view->base_table == $table) {
+      $index_views[] = $view;
+    }
+  }
+
+  if (empty($index_views)) {
+    $form['status'] = array(
+      '#type' => 'item',
+      '#markup' => t('There is no views using this index.'),
+    );
+    return $form;
+  }
+  else {
+    $form['wrapper'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Views Blocks that shouldn\'t be affeted by Search API Facets',
+      '#description' => 'By unchecking a block in a view, you specify that block won\'t be affected by any Search Api Facet applied.',
+    );
+
+    foreach($index_views as $view) {
+      $var_name = 'vrc_search_facet_block_blacklist_' . $index->machine_name;
+      $blacklist = variable_get($var_name, array());
+      $form['wrapper'][$var_name] = array(
+        '#tree' => TRUE,
+        '#type' => 'fieldset',
+        '#title' => $view->human_name,
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+      );
+      // Get the displays of type block
+      $block_displays = array_filter($view->display,
+        create_function('$display', 'return $display->display_plugin == "block";'));
+      $form['wrapper'][$var_name][$view->name] = array(
+        '#type' => 'checkboxes',
+        '#options' => drupal_map_assoc(array_keys($block_displays)),
+        '#default_value' => !empty($blacklist[$view->name]) ? $blacklist[$view->name] : array(),
+      );
+    }
+    return system_settings_form($form);
+  }
+}
+
+/**
+ * Implements hook_views_pre_build
+ */
+function vrc_search_views_pre_build(&$view) {
+  // The block display can't receive the exposed filter(the fulltext search)'s
+  // value, manually set it here
+  if ($view->name == 'site_search') {
+    $page_view = views_get_page_view();
+    if (!empty($view->filter['search_api_views_fulltext']) && !empty($page_view->filter['search_api_views_fulltext'])) {
+      $view->filter['search_api_views_fulltext']->value = $page_view->filter['search_api_views_fulltext']->value;
+    }
+  }
+}

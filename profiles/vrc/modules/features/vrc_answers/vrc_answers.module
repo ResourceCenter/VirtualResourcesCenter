@@ -1,0 +1,633 @@
+<?php
+/**
+ * @file
+ * Code for the Answers feature.
+ */
+
+include_once('vrc_answers.features.inc');
+module_load_include('inc', 'vrc_answers', 'includes/vrc_answers.field_utils');
+module_load_include('inc', 'vrc_answers', 'includes/vrc_answers.notify');
+module_load_include('inc', 'vrc_answers', 'includes/vrc_answers.search');
+module_load_include('inc', 'vrc_answers', 'includes/vrc_answers.lock');
+
+/**
+ * Implement hook_help().
+ */
+function vrc_answers_help($path, $arg) {
+  switch ($path) {
+    case "admin/help#modulename":
+      return '<p>' . t('Enables users to ask questions and for other users to answer them.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_preprocess_block()
+ */
+function vrc_answers_preprocess_block(&$vars) {
+  $block = $vars['block'];
+  if ($block->module == 'vrc_answers' && $block->delta == 'vrc_post_new_answer') {
+    $vars['block_html_id'] = 'add_your_answer';
+  }
+
+  if ($block->module == 'quicktabs' && $block->delta == 'answer_listing') {
+    $vars['block_html_id'] = 'question_answers_section';
+  }
+}
+
+/**
+ * Implements hook_preprocess_node()
+ */
+function vrc_answers_preprocess_node(&$vars) {
+
+}
+
+/**
+ * Implements hook_quicktabs_alter()
+ */
+function vrc_answers_quicktabs_alter(&$quicktabs) {
+  if ($quicktabs->machine_name == 'answer_listing') {
+    // Override the title
+    $node = menu_get_object();
+    if (!empty($node)) {
+      $count = vrc_answers_get_answers_count($node->nid);
+      if (!empty($count)) {
+        $quicktabs->title = format_plural($count, '1 Answer', '@count Answers');
+      }
+    }
+  }
+}
+
+/*
+ * Implementation of hook_menu().
+ */
+function vrc_answers_menu() {
+  // XXX
+//   $items['admin/config/content/answers'] = array(
+//     'title'              => 'Answers',
+//     'description'        => 'Configure how the question/answer service operates',
+//     'page callback'      => 'drupal_get_form',
+//     'page arguments'     => array('vrc_answers_settings'),
+//     'access arguments'   => array('administer content types'),
+//     'type'               => MENU_NORMAL_ITEM
+//   );
+  $items['questions/start_ask'] = array(
+    'title'            => 'Add a Question',
+    'description'      => 'Enter a question to ask ... and start the process of asking it',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('vrc_answers_start_ask_form'),
+    'access arguments' => array('create question content'),
+    'file'             => 'includes/vrc_answers.search.inc',
+    'type'             => MENU_VISIBLE_IN_BREADCRUMB ,
+  );
+  $items['answer-edit/%node'] = array(
+    'title' => 'Edit answer',
+    'page callback' => 'vrc_answers_answer_edit_page',
+    'page arguments' => array(1),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['set-best-answer/%/%node'] = array(
+    'title' => 'Set best answer',
+    'page callback' => 'vrc_answers_set_best_answer',
+    'page arguments' => array(2, 1),
+    'access callback' => 'vrc_answer_set_best_answer_access',
+    'access arguments' => array(2),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission
+ */
+function vrc_answer_permission() {
+  return array(
+    'set best answer' => array(
+      'title' => t('Set best answer'),
+      'description' => t('The permission to choose an answer as the best for a question.'),
+    )
+  );
+}
+
+/**
+ * Check if a user has permission to set the best answer for a question
+ */
+function vrc_answer_set_best_answer_access($answer, $account = NULL) {
+  global $user;
+
+  if (!isset($account)) {
+    $account = $user;
+  }
+
+  // The following user have acess:
+  // Super user, question author, and the users have been granted access
+  $question_nid = vrc_answer_get_question_nid_by_answer($answer->nid);
+  $question = node_load($question_nid);
+  if ($account->uid == 1 || user_access('set best answer', $account) || $question->uid == $account->uid) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Page callback for setting/unsetting an answer as the best answer
+ */
+function vrc_answers_set_best_answer($answer, $op = 'set') {
+  if (in_array($op, array('set', 'unset'))) {
+    $question_nid = vrc_answer_get_question_nid_by_answer($answer->nid);
+    if (!empty($question_nid)) {
+      $question = node_load($question_nid);
+      $lancode = field_language('node', $question, 'field_best_answer');
+
+      if ($op == 'set') {
+        $question->field_best_answer[$lancode] = array();
+        $question->field_best_answer[$lancode][] = array('nid' => $answer->nid);
+      }
+      else {
+        $question->field_best_answer[$lancode] = array();
+      }
+      node_save($question);
+    }
+  }
+  drupal_goto('node/' . $question->nid);
+}
+
+/**
+ * Implements hook_theme()
+ */
+function vrc_answers_theme() {
+  $tpl_path = drupal_get_path('module', 'vrc_answers') . '/templates';
+  $items['answer_node_form'] = array(
+    'render element' => 'form',
+    'template' => 'answer-node-form',
+    'path' => $tpl_path,
+  );
+  $items['set_best_answer_links'] = array(
+    'variables' => array('answer' => NULL),
+  );
+  return $items;
+}
+
+/**
+ * Theming function for the links to set/unset best answer
+ */
+function theme_set_best_answer_links($vars) {
+  $output = '';
+  $answer = $vars['answer'];
+  $question_nid = vrc_answer_get_question_nid_by_answer($answer->nid);
+  $question = node_load($question_nid);
+
+  if (!empty($question) && vrc_answer_set_best_answer_access($answer)) {
+    $best_answer_nid = vrc_answers_get_question_best_answer_nid($question->nid);
+    // Already a best answer
+    if ($answer->nid == $best_answer_nid) {
+      $output .= 'This is the best answer.';
+      $output .= theme('link', array(
+        'text' => 'Unset it as the the best answer.',
+        'path' => 'set-best-answer/unset/' . $answer->nid,
+        'options' => array(
+            'attributes' => array('class' => array('best-answer')),
+            'html' => TRUE),
+      ));
+    }
+    // Not a best answer
+    else {
+      $output .= theme('link', array(
+        'text' => 'Set this as the best answer',
+        'path' => 'set-best-answer/set/' . $answer->nid,
+        'options' => array(
+          'attributes' => array('class' => array('best-answer')),
+          'html' => TRUE
+        ),
+      ));
+    }
+  }
+  return $output;
+}
+
+/**
+ * Page callback
+ */
+function vrc_answers_answer_edit_page($node) {
+  drupal_set_title(t('Edit answer'));
+  $output = '';
+  $output .= '<h2>Answer</h2>';
+
+  module_load_include('inc', 'node', 'node.pages');
+  $form = drupal_get_form('answer_node_form', $node);
+
+  $output .= drupal_render($form);
+  return $output;
+}
+
+function vrc_answers_settings() {
+  $form = array_merge(
+    array(),
+    vrc_answers_notify_settings()
+  );
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_block_info()
+ */
+function vrc_answers_block_info() {
+  $blocks['vrc_post_new_answer'] = array(
+    'info' => t('Post new answer'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view()
+ */
+function vrc_answers_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'vrc_post_new_answer':
+      $block['subject'] = t('Your Answer');
+
+      // Embed a answer form
+      global $user;
+      $node = (object) array(
+        'uid' => $user->uid,
+        'name' => (isset($user->name) ? $user->name : ''),
+        'type' => 'answer',
+        'language' => LANGUAGE_NONE
+      );
+      node_object_prepare($node);
+      module_load_include('inc', 'node', 'node.pages');
+      $form = drupal_get_form('answer_node_form', $node);
+
+      $block['content'] = drupal_render($form);
+      break;
+  }
+  return $block;
+}
+
+/*
+ * Implement hook_node_view
+ */
+function vrc_answers_node_view($node, $view_mode, $langcode) {
+  if ($node->type == 'question') {
+    // Ensure that the 'Post an Answer' link only shows if the question is not locked
+    // The logic is a little complicated below to avoid updating the field when not necessary
+    // The field should have the *opposite* value of the node->locked field
+    $field_instance = field_info_instance('node', 'field_answer_question', 'answer');
+    $locked_p = vrc_answers_field_get_value($node, 'field_question_locked_p');
+    // XXX: Fix a notice by checking vars, should investigate why
+    if (!empty($field_instance['widget']['settings']['node_link'])) {
+      if ($locked_p == $field_instance['widget']['settings']['node_link']['full']) {
+        $field_instance['widget']['settings']['node_link']['full'] = $locked_p ? +0 : +1;
+        field_update_instance($field_instance);
+      }
+    }
+  }
+
+  if ($node->type == 'answer') {
+    $node->content['set_best_answer_links'] = array(
+      '#theme' => 'set_best_answer_links',
+      '#answer' => $node,
+    );
+  }
+}
+
+/**
+ * Implements hook_views_pre_render()
+ */
+function vrc_answers_views_pre_render(&$view) {
+  // Override the block title
+  if ($view->name == 'question_answers' && $view->current_display == 'answers') {
+    if (!empty($view->total_rows)) {
+      $view->build_info['title'] = format_plural($view->total_rows, '1 Answer', '@count Answers');
+    }
+  }
+}
+
+/*
+ * Implement hook_node_insert
+ */
+function vrc_answers_node_insert($node) {
+  // XXX
+//   vrc_answers_notify_node_insert($node);
+}
+
+/*
+ * Implement hook_node_delete
+ *
+ * If a question is deleted, also delete its answers
+ */
+function vrc_answers_node_delete($node) {
+  if ($node->type == 'question') {
+    //$answer_nids = _vrc_answers_question_answers($node);
+      $answer_nids = vrc_answers_question_answers($node);
+    foreach ($answer_nids as $answer_nid) {
+      node_delete($answer_nid);
+    }
+  }
+}
+
+/*
+ * vrc_answers_question_answers
+ *
+ * Input: $question: a question node or nid
+ * Returns: List of answer nids
+ *
+ */
+function vrc_answers_question_answers($question) {
+  $results = array();
+  $qid = is_object($question) ? $question->nid : $question;
+
+  // Use views as a query engine
+  $view = views_get_view('vrc_answers_to_a_question');
+  if (!empty($view)) {
+    $view->set_arguments(array($qid));
+    $view->execute();
+
+    foreach ($view->result as $result) {
+      $nid = $result->nid;
+      $results[$nid] = $nid;
+    }
+  }
+  return $results;
+}
+
+/*
+ * Implement hook_form_alter
+ */
+function vrc_answers_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+
+  vrc_answers_notify_form_alter($form, $form_state, $form_id);
+  vrc_answers_search_form_alter($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_from_FORM_ID_alter()
+ */
+function vrc_answers_form_question_node_form_alter(&$form, &$form_state) {
+  // Change the name of the submit button
+  $form['actions']['submit']['#value'] =
+  ($form['nid']['#value'] == NULL) ? t('Ask Question') : t('Update Question');
+
+  // insert a predefined question title if one has been set in the path
+  if (isset($_GET['title'])) {
+    $title = check_plain($_GET['title']);
+    drupal_set_title(t('Add some details to your question'));
+    $form['title']['#default_value'] = $title;
+  }
+
+  // Hide 'field_question_locked_p' (this is only used behind the scenes, not directly set by users)
+  $form['field_question_locked_p']['#prefix'] = '<div style="display: none;">';
+  $form['field_question_locked_p']['#suffix'] = '</div>';
+  // Hide the 'Best answer' field from the the node edit interface, it's also
+  // be used under the scenes
+  $form['field_best_answer']['#access'] = FALSE;
+  // Note: The visibility of the fields 'Tool' and 'Categories' are controlled
+  // by the field permissions, they are only editable to the admin, editor, and
+  // support
+  $form['#submit'][] = 'vrc_answers_node_form_submit';
+}
+
+/**
+ * Implements hook_element_info_alter()
+ */
+function vrc_answers_element_info_alter(&$type) {
+  if (!empty($type['text_format'])) {
+    if (empty($type['text_format']['#process'])) {
+      $type['text_format']['#process'] = array();
+    }
+    $type['text_format']['#process'][] = 'vrc_answers_process_text_format_element';
+  }
+}
+
+/**
+ * Implements hook_form_FORMID_alter()
+ */
+function vrc_answers_form_answer_node_form_alter(&$form, &$form_state) {
+  // A fix around the issue that answers created by admin not publised by default
+  foreach (element_children($form['options']) as $key) {
+    $form['options'][$key]['#type'] = '#value';
+    $form['options'][$key]['#value'] = $form['options'][$key]['#default_value'];
+  }
+
+  // (1) When add new answer, make sure the right question value is assigned
+  if (empty($form['nid']['#value'])) {
+    $question = menu_get_object();
+    $question_nid = $question->nid;
+
+    $field_lan = $form['field_answer_question']['#language'];
+    $form['field_answer_question'][$field_lan]['#value'] = $question_nid;
+
+    // 1.1 The anonymous user can't post the answer directly, he/she could fill
+    //     the answer content and login, and come back and post
+    if (!user_is_logged_in()) {
+      // Hide the submit button
+      $form['actions']['submit']['#access'] = FALSE;
+      // Add a speical button to enble storage of the answer temporarily for
+      // later refill and redirect to the login page
+      $form['actions']['annoymous_submit'] = array(
+        '#type' => 'submit',
+        '#value' => t('Login/Register to post'),
+        '#weight' => 5,
+        '#submit' => array('vrc_answers_answer_node_form_guest_submit'),
+      );
+    }
+    // 1.2 For authenticated user
+    else {
+      // Restore the answer value, if any
+      if (!empty($_SESSION['quesition_answers']) && !empty($_SESSION['quesition_answers'][$question->nid])) {
+        $stored_content = $_SESSION['quesition_answers'][$question->nid];
+        $form['field_answer_body'][$form['field_answer_body']['#language']][0]['#default_value'] = $_SESSION['quesition_answers'][$question->nid];
+      }
+      // Change submit button text
+      $form['actions']['submit']['#value'] = t('Post Your Answer');
+      $form['actions']['submit']['#submit'][] = 'vrc_answers_answer_node_form_submit';
+    }
+  }
+  // (2) When editing an answer, get the question node object for later use
+  else {
+    $items = field_get_items('node', $form_state['node'], 'field_answer_question');
+    $first = array_shift($items);
+    $question_nid = $first['nid'];
+    $question = node_load($question_nid);
+
+    // Hide the delete button
+    if (!empty($form['actions']['delete'])) {
+      $form['actions']['delete']['#acess'] = FALSE;
+    }
+    // The diff button is a overkill, hide too
+    if (!empty($form['actions']['preview_changes'])) {
+      $form['actions']['preview_changes']['#access'] = FALSE;
+    }
+    // Change the submit button text
+    if (!empty($form['actions']['submit'])) {
+      $form['actions']['submit']['#value'] = t('Save Edits');
+    }
+  }
+
+  $form['question_nid'] = array(
+    '#type' => 'value',
+    '#value' => !empty($question->nid) ? $question->nid : '',
+  );
+
+  $form['#validate'][] = 'vrc_answers_answer_node_form_validate';
+}
+
+/**
+ * Submit handler for guest user
+ */
+function vrc_answers_answer_node_form_guest_submit(&$form, &$form_state) {
+  // @TODO: Need to make sure this is a create new answer form
+  $values = $form_state['values'];
+
+  // Store the the answer content in session and rediret to the login page
+  if (isset($_SESSION['quesition_answers'])) {
+    $_SESSION['quesition_answers'] = array();
+  }
+  $_SESSION['quesition_answers'][$values['question_nid']]
+    = $values['field_answer_body'][LANGUAGE_NONE][0]['value'];
+
+  $form_state['redirect'] = array('user', array(
+    'query' => array(drupal_get_destination()),
+    'fragment' => 'add_your_answer',
+  ));
+}
+
+
+/**
+ * Some custom process for the field_message_body field
+ */
+function vrc_answers_process_text_format_element($element, $form_state) {
+  if ($form_state['build_info']['form_id'] == 'answer_node_form') {
+    $element['#title'] = '';
+    if (!empty($element['format'])) {
+      $element['format']['#title'] = t('Text format options');
+      $element['format']['#collapsible']  = TRUE;
+      $element['format']['#collapsed'] = TRUE;
+    }
+  }
+  return $element;
+}
+
+/**
+ * Custom form validation handler for the answer add/edit form
+ */
+function vrc_answers_answer_node_form_validate(&$form, &$form_state) {
+  $values = $form_state['values'];
+  // For logged in user, some content must be entered
+  // For annoymous users, the answer body can be empty, we don't want to stop
+  // him/her from registering/logging in
+  if (user_is_logged_in()) {
+    $click_btn_id = $form_state['clicked_button']['#id'];
+    // Don't apply this validation to the delete button.
+    if (in_array($click_btn_id, array('edit-submit', 'edit-preview'))) {
+      $langcode = field_language('node', $form_state['node'], 'field_answer_body');
+      if (empty($values['field_answer_body'][$langcode]) ||
+          empty($values['field_answer_body'][$langcode][0]['value'])) {
+        form_set_error('field_answer_body', t('The answer can\'t be empty.'));
+      }
+    }
+  }
+}
+
+/**
+ * Custom form submit handler for the answer add/edit form
+ */
+function vrc_answers_answer_node_form_submit(&$form, &$form_state) {
+  $values = $form_state['values'];
+
+  // Redirect to the question page the current answer is replying to
+  $form_state['redirect'] = 'node/' . $values['question_nid'];
+}
+
+/**
+ * Handle question form submits to lock or unlock according to if a best answer is chosen
+ */
+function vrc_answers_node_form_submit(&$form, &$form_state) {
+  $lang = field_language('node', $form['#node'], 'field_best_answer');
+  $best_answer = is_array($form_state['values']['field_best_answer'][$lang][0])
+               ? current($form_state['values']['field_best_answer'][$lang][0])
+               : FALSE;
+
+  // the following locking code is similar to that found in vrc_answers_unlock_question($question);
+  $lang = field_language('node', $form['#node'], 'field_question_locked_p');
+  if ($best_answer) {
+    $form_state['values']['field_question_locked_p'][$lang][0]['value'] = 1;
+    $form['#node']->field_question_locked_p[$lang][0]['value'] = 1;
+  }
+  else {
+    $form_state['values']['field_question_locked_p'][$lang][0]['value'] = 0;
+    $form['#node']->field_question_locked_p[$lang][0]['value'] = 0;
+  }
+
+//   drupal_set_message(t('Reload this page to check if it is properly locked or unlocked.'));
+}
+
+/**
+ * A function to get the answers count for a question
+ */
+function vrc_answers_get_answers_count($nid) {
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'answer')
+    ->fieldCondition('field_answer_question', 'nid', $nid)
+    ->execute();
+
+  if (!empty($result['node'])) {
+    return count($result['node']);
+  }
+  return;
+}
+
+/**
+ * Get the node id of an answer's question
+ * Given a answer, return the quesiton's node id
+ */
+function vrc_answer_get_question_nid_by_answer($node) {
+  if (is_numeric($node)) {
+    $node = node_load($node);
+  }
+  $items = field_get_items('node', $node, 'field_answer_question');
+  if (!empty($items)) {
+    $first = array_shift($items);
+    $question_nid = $first['nid'];
+    return $question_nid;
+  }
+  return;
+}
+
+/**
+ * Get a the node id of a question's best answer
+ */
+function vrc_answers_get_question_best_answer_nid($node) {
+  if (is_numeric($node)) {
+    $node = node_load($node);
+  }
+  $items = field_get_items('node', $node, 'field_best_answer');
+  if (!empty($items)) {
+    $first = array_shift($items);
+    $answer_nid = $first['nid'];
+    return $answer_nid;
+  }
+  return;
+}
+
+/**
+ * Implements hook_preprocess_page()
+ * @TODO: Find why the page title is empty in question node's page view
+ */
+function vrc_answers_preprocess_page(&$vars) {
+  if (empty($vars['title']) && !empty($vars['node'])) {
+    $vars['title'] = $vars['node']->title;
+  }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter()
+ */
+function vrc_answers_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+}

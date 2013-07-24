@@ -1,0 +1,10 @@
+<?php
+
+
+/**
+ * example module update
+ */
+function vrc_modulemgr_update_7001() {
+  module_enable(array('vrc_nomail'));
+}
+

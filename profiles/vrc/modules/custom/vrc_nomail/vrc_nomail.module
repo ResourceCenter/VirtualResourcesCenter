@@ -1,0 +1,124 @@
+<?php
+/**
+ * @file handles situations where email might be sent to a user in the 'no email' role
+ */
+
+
+/**
+ * implements hook_menu()
+ */
+
+/**
+ * implements hook_mail_alter()
+ */
+function vrc_nomail_mail_alter($message) {
+  $no_email = false;
+
+  if (isset($message['params']['account'])) {
+    in_array('no email', $message['params']['account']->roles) AND $no_email = TRUE;
+  }
+  // also check To: ?
+
+  switch ($message['id']) {
+    case 'user_cancel_confirm':
+      if ($no_email) {
+        $message['send'] = FALSE;  //stop the sending of the email
+        drupal_set_message(t(implode('<br/>', $message['body'])));
+      }
+
+      break;
+    default:
+      break;
+  }
+}
+
+
+/**
+ * implements hook_form_alter()
+ */
+function vrc_nomail_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  switch($form_id) {
+    case 'user_cancel_confirm_form':
+      //override the submit handler
+      $form['#submit'] = array('_vrc_nomail_user_cancel_form_submit');
+      break;
+    case 'question_node_form':
+      if (in_array('no email', $user->roles)) {
+        unset($form['field_notify_p']);
+      }
+      break;
+  }
+
+  return;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the user reg form.
+ *
+ * Adds two fields to the node form, second only appears after first is enabled.
+ */
+function vrc_nomail_form_user_register_form_alter(&$form, &$form_state, $form_id) {
+  $form['account']['nomail'] = array(
+          '#type'   => 'checkbox',
+          '#title'  => 'No email address',
+          '#description' => 'I do not wish to submit an email address. I understand that this will restrict my access to some features on this website.',
+          '#weight' => -30,
+  );
+  $toggle = array(':input[name="nomail"]' => array('checked' => FALSE));
+  $states = array('required' => $toggle, 'visible' => $toggle);
+
+  $form['account']['mail']['#required'] = FALSE;
+  $form['account']['mail']['#states'] = $states;
+
+  $form['account']['conf_mail']['#required'] = FALSE;
+  $form['account']['conf_mail']['#states'] = $states;
+
+
+  array_unshift($form['#validate'], 'vrc_nomail_user_register_validate');
+  $form['#submit'][] = 'vrc_nomail_user_register_submit';
+
+//   dpm($form['#validate']);
+}
+
+/**
+ * change user reg validation to not require email
+ */
+function vrc_nomail_user_register_validate(&$form, &$form_state) {
+  if ($form_state['values']['nomail'] == 1) {
+    $dummy_email = 'M8R-3wl72@mailinator.com';
+    form_set_value($form['account']['mail'], $dummy_email, $form_state);
+    form_set_value($form['account']['conf_mail'], $dummy_email, $form_state);
+  }
+}
+
+/**
+ * stop messages about emails not sending
+ */
+function vrc_nomail_user_register_submit(&$form, &$form_state) {
+  $mess = drupal_get_messages();
+//  dpm($mess);
+}
+
+/**
+ * this is called instead of user_cancel_confirm_form_submit() so that we can proceed without
+ * email confirmation.
+ */
+function _vrc_nomail_user_cancel_form_submit($form, &$form_state) {
+  $account = $form_state['values']['_account'];
+
+  if (!in_array('no email', $account->roles)) {
+    //use standard drupal function for users not in the 'no email' role
+    user_cancel_confirm_form_submit($form, $form_state);
+    return;
+  }
+
+  user_cancel($form_state['values'], $account->uid, $form_state['values']['user_cancel_method']);
+
+  $form_state['redirect'] = '';
+  batch_process('');
+  drupal_get_messages(); //clear the message queue to stop the message about an email being sent.
+
+  return;
+}
+

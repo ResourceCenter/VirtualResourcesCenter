@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the vrc_user_profiles feature.
+ */
+
+include_once 'vrc_user_profiles.features.inc';

@@ -1,0 +1,14 @@
+name = Raphaël
+description = API module for the Raphaël vector graphics JavaScript library.
+core = 7.x
+dependencies[] = libraries
+
+files[] = raphael.module
+
+
+
+; Information added by drush on 2013-01-22
+version = ""
+project = "raphael"
+datestamp = "1358825860"
+

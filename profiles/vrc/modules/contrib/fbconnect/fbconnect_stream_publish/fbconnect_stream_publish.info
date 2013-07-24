@@ -1,0 +1,10 @@
+name =  Facebook Stream Publish
+package = "Facebook Social"
+core = 7.x
+
+
+; Information added by drush on 2013-02-20
+version = "1d5f944"
+project = "fbconnect"
+datestamp = "1361330509"
+

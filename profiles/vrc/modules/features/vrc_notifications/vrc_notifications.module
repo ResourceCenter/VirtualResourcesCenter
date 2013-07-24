@@ -1,0 +1,455 @@
+<?php
+/**
+ * @file
+ * Code for the VRC Notifications feature.
+ *
+ * VRC requires 5 triggers.
+ * Triggers are Drupal triggers defined in `hook_trigger_info()`
+ * (`/admin/structure/trigger/vrc`):
+ *
+ * * A new answer is added (triggered by answer).
+ * * An answer is updated (triggered by answer).
+ * * A best answer is selected (triggered by question).
+ * * A new question is posted with a tag (triggered by question).
+ * * A new article is posted with a tag (triggered by article).
+ *
+ * Triggers are associated with actions (either manually or via install).
+ * Actions are Drupal actions defined in `hook_action_info()`
+ * (`/admin/config/system/actions`):
+ *
+ * * Send notifications for a question and a certain answer.
+ * * Send notifications for a question and the best answer.
+ * * Send notifications for a node and a certain tag.
+ *
+ * The custom actions are directly routed to Notifications events.
+ * Events are defined with Notifications hooks, and should be one-to-one
+ * matched with the triggers (technically can be many-to-many but not
+ * suggested).
+ * (`admin/config/messaging/notifications/events`)
+ */
+
+include_once 'vrc_notifications.features.inc';
+
+/**
+ * Implements hook_token_info_alter().
+ */
+function vrc_notifications_token_info_alter(&$info) {
+  if (!empty($info['tokens']['node'])) {
+    $info['types']['question'] = array(
+      'name' => t('Question'),
+      'description' => t('Question is also node'),
+      'needs-data' => 'node',
+    );
+    $info['tokens']['question'] = $info['tokens']['node'];
+  }
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function vrc_notifications_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  if ($type == 'question' && !empty($data['question'])) {
+    $data['node'] = $data['question'];
+    return node_tokens('node', $tokens, $data, $options);
+  }
+}
+
+/**
+ * Implements hook_notifications().
+ */
+function vrc_notifications_notifications($op) {
+  $types = array();
+  switch ($op) {
+    case 'object types':
+      $types['question'] = array(
+        'title' => t('Question'),
+        'class' => 'VRC_Notifications_Node_Question',
+      );
+      return $types;
+    case 'event types':
+      // Triggered by answer but users subscribe to questions, thus the object
+      // is question.
+      $types['question_answer_insert'] = array(
+        'object' => 'question',
+        'action' => 'answer_insert',
+        'title' => t('[VRC] Answer added'),
+        'class' => 'VRC_Notifications_Question_Answer_Insert_Event',
+        'template' => 'vrc_notifications_question_answer_insert',
+        'triggers' => array('vrc' => array('question_answer_insert')),
+        'actions' => array('vrc_notifications_question_answer_action'),
+      );
+      $types['question_answer_update'] = array(
+        'object' => 'question',
+        'action' => 'answer_update',
+        'title' => t('[VRC] Answer updated'),
+        'class' => 'VRC_Notifications_Question_Answer_Update_Event',
+        'template' => 'vrc_notifications_question_answer_update',
+        'triggers' => array('vrc' => array('question_answer_update')),
+        'actions' => array('vrc_notifications_question_answer_action'),
+      );
+      $types['question_answer_best'] = array(
+        'object' => 'question',
+        'action' => 'answer_best',
+        'title' => t('[VRC] Best answer selected'),
+        'class' => 'VRC_Notifications_Question_Answer_Best_Event',
+        'template' => 'vrc_notifications_question_answer_best',
+        'triggers' => array('vrc' => array('question_answer_best')),
+        'actions' => array('vrc_notifications_question_answer_best_action'),
+      );
+      // Triggered by node but users subscribe to tags.
+      // But object type is set to node, in order to generate an event with only
+      // a node object. Otherwise one node can generate multiple events. One
+      // event doesn't send duplicate notifications, while multiple events can.
+      $types['tag_question_insert'] = array(
+        'object' => 'node',
+        'action' => 'question_insert',
+        'title' => t('[VRC] Question added with a tag'),
+        'class' => 'VRC_Notifications_Tag_Question_Insert_Event',
+        'template' => 'vrc_notifications_tag_question_insert',
+        'triggers' => array('vrc' => array('tag_question_insert')),
+        'actions' => array('vrc_notifications_tag_node_insert_action'),
+      );
+      $types['tag_article_insert'] = array(
+        'object' => 'node',
+        'action' => 'article_insert',
+        'title' => t('[VRC] Article added with a tag'),
+        'class' => 'VRC_Notifications_Tag_Article_Insert_Event',
+        'template' => 'vrc_notifications_tag_article_insert',
+        'triggers' => array('vrc' => array('tag_article_insert')),
+        'actions' => array('vrc_notifications_tag_node_insert_action'),
+      );
+      return $types;
+    case 'message templates':
+      $types['vrc_notifications_question_answer_insert'] = array(
+        'object' => 'question',
+        'title' => t('[VRC] Answer added'),
+        'class' => 'VRC_Notifications_Question_Answer_Insert_Template',
+      );
+      $types['vrc_notifications_question_answer_update'] = array(
+        'object' => 'question',
+        'title' => t('[VRC] Answer updated'),
+        'class' => 'VRC_Notifications_Question_Answer_Update_Template',
+      );
+      $types['vrc_notifications_question_answer_best'] = array(
+        'object' => 'question',
+        'title' => t('[VRC] Best answer selected'),
+        'class' => 'VRC_Notifications_Question_Answer_Best_Template',
+      );
+      $types['vrc_notifications_tag_question_insert'] = array(
+        'object' => 'node',
+        'title' => t('[VRC] Question added with a tag'),
+        'class' => 'VRC_Notifications_Tag_Question_Insert_Template',
+      );
+      $types['vrc_notifications_tag_article_insert'] = array(
+        'object' => 'node',
+        'title' => t('[VRC] Article added with a tag'),
+        'class' => 'VRC_Notifications_Tag_Article_Insert_Template',
+      );
+      return $types;
+    case 'subscription types':
+      $types['vrc_question'] = array(
+        'title' => t('[VRC] Question'),
+        'class' => 'VRC_Notifications_Question_Subscription',
+        'field_types' => array('question:nid'),
+        'object_types' => array('question'),
+        'access' => array('subscribe to content'),
+        'description' => t('Subscribe to the answers of this question.'),
+        'display_options' => array('node_links', 'teaser_links'),
+      );
+      $types['vrc_tag'] = array(
+        'title' => t('[VRC] Tag'),
+        'class' => 'VRC_Notifications_Tag_Subscription',
+        'field_types' => array('term:tid'),
+        'object_types' => array('taxonomy_term'),
+        'access' => array('subscribe to content'),
+        'description' => t('Subscribe to new questions and articles tagged with this term.'),
+        'display_options' => array(),
+      );
+      return $types;
+    case 'field types':
+      $types['question:nid'] = array(
+        'title' => t('Question nid'),
+        'class' =>  'VRC_Notifications_Question_Field',
+      );
+      return $types;
+  }
+}
+
+/**
+ * Implements hook_node_view().
+ *
+ * Displays subscription links with question nodes.
+ *
+ * @see notifications_content_node_view()
+ */
+function vrc_notifications_node_view($node, $view_mode, $langcode) {
+  if ($node->type != 'question' || !user_access('create subscriptions')) {
+    return;
+  }
+  if ($view_mode == 'full') {
+    $display_option = 'node_links';
+  } elseif ($view_mode == 'teaser') {
+    $display_option = 'teaser_links';
+  } else {
+    return;
+  }
+  vrc_notifications_question_links($node, $display_option);
+}
+
+/**
+ * Attach subscription links to the question object.
+ *
+ * @see notifications_content_node_links()
+ */
+function vrc_notifications_question_links($node, $display_option, $account = NULL) {
+  $account = ($account == NULL) ? $GLOBALS['user'] : $account;
+  $objects = array(notifications_object('question', $node));
+  $subscription_list = Notifications_Subscription::object_subscriptions($objects, $account)
+    ->set_user($account)
+    ->filter_option($display_option)
+    ->get_instances();
+
+  // Truncate title and put the full title in link attributes.
+  foreach($subscription_list as $key => $subscription) {
+    $link = $subscription->element_link('subscription');
+    $link['#options']['attributes']['title'] = $link['#title'];
+    $item = array(
+      'title' => truncate_utf8($link['#title'], 40, TRUE, TRUE),
+      'href' => $link['#href'],
+    ) + $link['#options'];
+    $node->content['links']['notifications_content']['#links']['notifications-' . $key] = $item;
+  }
+}
+
+/**
+ * Implements hook_notifications_object_OBJECT_TYPE().
+ *
+ * @link: http://drupal.org/node/1796696
+ */
+function vrc_notifications_notifications_object_question($op, $node, $account = NULL) {
+  switch ($op) {
+    case 'subscription types':
+      return array('vrc_question');
+    case 'subscriptions':
+      // Return available subscription options for this node and this user account
+      $options = array();
+      if (notifications_subscription_type_enabled('vrc_question')) {
+        $options[] = notifications_subscription('vrc_question')
+          ->set_node($node);
+      }
+      return $options;
+  }
+}
+
+/**
+ * Implements hook_notifications_object_OBJECT_TYPE().
+ */
+function vrc_notifications_notifications_object_taxonomy_term($op, $term, $account = NULL) {
+  switch ($op) {
+    case 'subscription types':
+      return array('vrc_tag');
+    case 'subscriptions':
+      $options = array();
+      if (notifications_subscription_type_enabled('vrc_tag')) {
+        $options[] = notifications_subscription('vrc_tag')
+          ->add_field('term:tid', $term->tid);
+      }
+      return $options;
+  }
+}
+
+/**
+ * Implements hook_notifications_object_OBJECT_TYPE().
+ *
+ * The object for the tag events is set to node, but users subscribe to terms.
+ * So...
+ */
+function vrc_notifications_notifications_object_node($op, $node, $account = NULL) {
+  switch ($op) {
+    case 'subscription types':
+      return array('vrc_tag');
+  }
+}
+
+/**
+ * Implements hook_trigger_info().
+ */
+function vrc_notifications_trigger_info() {
+  $items = array();
+  $items['vrc']['question_answer_insert'] = array('label' => t('After an answer is added.'));
+  $items['vrc']['question_answer_update'] = array('label' => t('After an answer is updated.'));
+  $items['vrc']['question_answer_best'] = array('label' => t('Once the best answer is selected.'));
+  $items['vrc']['tag_question_insert'] = array('label' => t('A new question is posted with a tag.'));
+  $items['vrc']['tag_article_insert'] = array('label' => t('A new article is posted with a tag.'));
+  return $items;
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function vrc_notifications_action_info() {
+  $items = array();
+  $items['vrc_notifications_question_answer_action'] = array(
+    'type' => 'notifications',
+    'label' => t('Send notifications for a question and a certain answer'),
+    'configurable' => FALSE,
+    'behavior' => array('sends_notification'),
+    'triggers' => array('question_answer_insert', 'question_answer_update'),
+  );
+  $items['vrc_notifications_question_answer_best_action'] = array(
+    'type' => 'notifications',
+    'label' => t('Send notifications for a question and the best answer'),
+    'configurable' => FALSE,
+    'behavior' => array('sends_notification'),
+    'triggers' => array('question_answer_best'),
+  );
+  $items['vrc_notifications_tag_node_insert_action'] = array(
+    'type' => 'notifications',
+    'label' => t('Send notifications for a node and a certain tag'),
+    'configurable' => FALSE,
+    'behavior' => array('sends_notification'),
+    'triggers' => array('tag_question_insert', 'tag_article_insert'),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_node_insert().
+ *
+ * TODO: check field_notify_p and subscribe the author.
+ */
+function vrc_notifications_node_insert($node) {
+  if ($node->type == 'answer') {
+    _trigger_node($node, 'question_answer_insert');
+  }
+  elseif ($node->type == 'question') {
+    _trigger_node($node, 'tag_question_insert');
+  }
+  elseif ($node->type == 'article') {
+    _trigger_node($node, 'tag_article_insert');
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ *
+ * TODO: check field_notify_p and subscribe the author.
+ */
+function vrc_notifications_node_update($node) {
+  if ($node->type == 'answer') {
+    _trigger_node($node, 'question_answer_update');
+  }
+  // The best answer is selected or changed.
+  // No action for the best answer is removed.
+  if ($node->type == 'question' && !empty($node->original->nid)) {
+    $new = vrc_answers_get_question_best_answer_nid($node);
+    $old = vrc_answers_get_question_best_answer_nid($node->original);
+    if (!empty($new) && $new !== $old) {
+      _trigger_node($node, 'question_answer_best');
+    }
+  }
+}
+
+/**
+ * Action handler.
+ *
+ * @see actions_do()
+ */
+function vrc_notifications_question_answer_action($node, $context = array()) {
+  $node = $context['node'];
+  if (!empty($node->status) && empty($node->notifications_content_disable)) {
+    $question = vrc_notifications_get_question_by_answer($node);
+    if (!empty($question->status) && !empty($question->type) && $question->type == 'question') {
+      $event = notifications_event($context['hook']);
+      $event->add_object('node', $node);
+      $event->add_object('question', $question);
+      $event->trigger();
+    }
+  }
+}
+
+/**
+ * Action handler.
+ *
+ * Put node in the question object so I can use a same template class with the
+ * answer actions.
+ */
+function vrc_notifications_question_answer_best_action($node, $context = array()) {
+  $node = $context['node'];
+  if (!empty($node->status) && empty($node->notifications_content_disable)) {
+    $answer_nid = (int)vrc_answers_get_question_best_answer_nid($node);
+    if ($answer_nid) {
+      $answer = node_load($answer_nid);
+      if (!empty($answer->status) && !empty($answer->type) && $answer->type == 'answer') {
+        $event = notifications_event($context['hook']);
+        $event->add_object('node', $answer);
+        $event->add_object('question', $node);
+        $event->trigger();
+      }
+    }
+  }
+}
+
+/**
+ * Action handler.
+ */
+function vrc_notifications_tag_node_insert_action($node, $context = array()) {
+  $node = $context['node'];
+  if (!empty($node->status) && empty($node->notifications_content_disable)) {
+    $event = notifications_event($context['hook']);
+    $event->add_object('node', $node);
+    $event->trigger();
+  }
+}
+
+/**
+ * Implements hook_notifications_subscription().
+ */
+function vrc_notifications_notifications_subscription($op, $subscription = NULL) {
+  switch ($op) {
+    case 'page objects':
+      $objects = array();
+      $node = menu_get_object('node');
+      // Question page.
+      if (!empty($node->nid) && $node->type == 'question') {
+        // Question.
+        $objects[] = notifications_object('question', $node);
+        // Tags.
+        $vocabs = notifications_tags_vocabulary_enabled();
+        $terms = notifications_tags_node_terms($node);
+        foreach ($terms as $term) {
+          if (in_array($term->vid, $vocabs)) {
+            $objects[] = notifications_object('taxonomy_term', $term);
+          }
+        }
+      }
+      return $objects;
+  }
+}
+
+/**
+ * Get an answer's question obejct
+ * @return The node object the question.
+ */
+function vrc_notifications_get_question_by_answer($node) {
+  if (is_numeric($node)) {
+    $node = node_load($node);
+  }
+  if ($node->type != 'answer') {
+    return;
+  }
+
+  $items = field_get_items('node', $node, 'field_answer_question');
+  if (empty($items)) {
+    watchdog('vrc_notifications', t('Can\'t find the question for answer !nid'), array('!nid' => $node->nid));
+  }
+  else {
+    $first = array_shift($items);
+    $nid = (int)$first['nid'];
+    $result = node_load($nid);
+    if (!empty($result)) {
+      return $result;
+    }
+  }
+  return;
+}

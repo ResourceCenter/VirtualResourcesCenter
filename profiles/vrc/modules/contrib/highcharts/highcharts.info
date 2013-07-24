@@ -1,0 +1,11 @@
+name = Highcharts
+description = Highcharts for Drupal
+core = 7.x
+dependencies[] = libraries
+
+; Information added by drupal.org packaging script on 2012-09-07
+version = "7.x-2.x-dev"
+core = "7.x"
+project = "highcharts"
+datestamp = "1347021121"
+

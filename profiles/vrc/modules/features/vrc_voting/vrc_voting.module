@@ -1,0 +1,168 @@
+<?php
+/**
+ * @file
+ * Code for the vrc_voting feature.
+ */
+
+include_once 'vrc_voting.features.inc';
+
+/**
+ * Implements hook_node_view().
+ */
+function vrc_voting_node_view($node, $view_mode, $langcode = '') {
+  if (in_array($node->type, array('article', 'documentation', 'question'))) {
+    if (isset($node->content['rate_post_interesting'])) {
+      $node->content['rate_post_interesting']['#weight'] = 2;
+    }
+  }
+}
+
+/**
+ * Custom function to check if the user has voted on a rate widget
+ */
+function vrc_voting_has_user_voted($entity_type, $entity_id, $tag, $uid) {
+  $result = db_select('votingapi_vote', 'v')
+    ->fields('v')
+    ->condition('entity_type', $entity_type)
+    ->condition('entity_id', $entity_id)
+    ->condition('tag', $tag)
+    ->condition('uid', $uid)
+    ->execute();
+}
+
+/**
+ * Implements hook_theme()
+ */
+function vrc_voting_theme() {
+  $items = array();
+  $path = drupal_get_path('module', 'vrc_voting');
+  $items['rate_post_interesting'] = array(
+    'variables' => array(
+      'links' => NULL,
+      'results' => NULL,
+      'mode' => NULL,
+      'just_voted' => FALSE,
+      'content_type' => NULL,
+      'content_id' => NULL,
+      'display_options' => NULL
+    ),
+    'template' => 'post-interesting',
+    'path' => $path . '/templates/post-interesting',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_rate_widgets()
+ * @xxxx: so sad i can't tell the widget type in the preprocess
+ * @see: rate_rate_templates()
+ */
+function vrc_voting_rate_templates() {
+  $templates = array();
+  $path = drupal_get_path('module', 'vrc_voting') . '/templates';
+  $templates['post_interesting'] = (object) array(
+    'value_type' => 'points',
+    'options' => array(array('1', 'Yes'), array('-1', 'No')),
+    'customizable' => TRUE,
+    'translate' => TRUE,
+    'template_title' => t('Post interesting'),
+    'theme' => 'rate_post_interesting',
+    'js' => $path . '/post_interesting/post-interesting.js',
+    'css' => $path . '/post_interesting/post-interesting.css',
+  );
+  return $templates;
+}
+
+/**
+ * Implements tempalte_preprocess_hook()
+ *
+ * @see: rate_preprocess_rate_template_yesno()
+ */
+function vrc_voting_preprocess_rate_post_interesting(&$vars) {
+  // Rate buttons
+  $buttons = array();
+  foreach ($vars['links'] as $link) {
+    $button = theme('rate_button', array(
+      'text' => $link['text'],
+      'href' => $link['href'],
+      'class' => 'post-interesting-btn'
+    ));
+    $buttons[] = $button;
+  }
+  $vars['buttons'] = $buttons;
+
+  // Ensure the rate description is not empty
+  $vars['display_options']['description'] =
+    !empty($vars['display_options']['description']) ?
+    $vars['display_options']['description']:
+    t('Was this post interesting?');
+
+  $user_vote = $vars['results']['rating'];
+  if ($user_vote > 0) {
+    $vars['rate_summary'] = t('@count people think this post is interesting.',
+      array('@count' => $vars['results']['rating']));
+  }
+  else if ($user_vote < 0) {
+    $vars['rate_summary'] = t('@count people think this post is not interesting.',
+      array('@count' => abs($vars['results']['rating'])));
+  }
+
+  $vars['login_text'] = l(t('Please register/login to give feedback.'), 'user');
+}
+
+/**
+ * Implements MODULENAME_preprocess_node()
+ */
+function vrc_voting_preprocess_node(&$vars) {
+  // Note: Currently all the widgets settings are stored in a single variable -
+  // 'rate_widgets'.
+  switch ($vars['type']) {
+    case 'answer':
+      // Some widgets to put here
+      $vars['rate_widget_answer_vote'] = rate_embed($vars['node'], 'answer_vote', RATE_COMPACT);
+      $vars['rate_widget_answer_useful'] = rate_embed($vars['node'], 'answer_useful', RATE_COMPACT);
+      break;
+  }
+}
+
+/**
+ * Get a node's count of likes
+ */
+function vrc_voting_get_count_of_likes_of_node($node) {
+  if (is_numeric($node)) {
+    $node = node_load($node);
+  }
+  $count = NULL;
+  // FIXME: Not quite sure what rate widgets are being used on for the content
+  // type 'documentation' and 'article'
+  switch ($node->type) {
+    case 'question':
+      $widget_id = vrc_voting_get_widget_id_by_machine_name('post_interesting');
+      $result = rate_get_results('node', $node->nid, $widget_id);
+      $count = $result['count'];
+      break;
+    case 'documentation':
+    case 'article':
+      break;
+  }
+  return $count;
+}
+
+/**
+ * Get a rate widget's widget id by it's machine name
+ * @see: rate_get_results()
+ * XXX: Any good reason to use the integer widget id?
+ * @todo: Add cache for this function?
+ */
+function vrc_voting_get_widget_id_by_machine_name($machine_name) {
+  $widgets = variable_get(RATE_VAR_WIDGETS, array());
+  if (!empty($widgets)) {
+    foreach ($widgets as $widget_id => $widget) {
+      if ($widget->name == $machine_name) {
+        return $widget_id;
+      }
+    }
+  }
+  return NULL;
+}
+

@@ -1,0 +1,24 @@
+# Chinese, Simplified translation of Strongarm (7.x-2.0)
+# Copyright (c) 2012 by the Chinese, Simplified translation team
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Strongarm (7.x-2.0)\n"
+"POT-Creation-Date: 2012-06-13 16:34+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Language-Team: Chinese, Simplified\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "Value"
+msgstr "值"
+msgid "Variable"
+msgstr "变量"
+msgid "Overridden"
+msgstr "覆盖"
+msgid "Storage"
+msgstr "存储"
+msgid "In code"
+msgstr "在程序"

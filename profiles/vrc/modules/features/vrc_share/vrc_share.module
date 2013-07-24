@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the VRC Share feature.
+ */
+
+include_once 'vrc_share.features.inc';

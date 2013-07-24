@@ -1,0 +1,15 @@
+name = Web messaging
+description = Sending Method: Show messages on user's page
+package = "Messaging"
+dependencies[] = messaging
+core = 7.x
+files[] = messaging_simple.inc
+files[] = views/messaging_simple.views.inc
+files[] = views/messaging_simple_handler_field_body.inc
+
+
+; Information added by drush on 2013-01-31
+version = "32e414b"
+project = "messaging"
+datestamp = "1359603871"
+

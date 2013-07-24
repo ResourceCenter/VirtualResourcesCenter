@@ -1,0 +1,9 @@
+name = FBConnect Test
+dependencies[] = fbconnect
+
+
+; Information added by drush on 2013-02-20
+version = "1d5f944"
+project = "fbconnect"
+datestamp = "1361330509"
+

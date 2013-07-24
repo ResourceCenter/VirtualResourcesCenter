@@ -1,0 +1,20 @@
+# Tamil, Sri Lanka translation of Administration menu (7.x-3.0-rc3)
+# Copyright (c) 2012 by the Tamil, Sri Lanka translation team
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Administration menu (7.x-3.0-rc3)\n"
+"POT-Creation-Date: 2012-05-18 22:21+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Language-Team: Tamil, Sri Lanka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "Home"
+msgstr "முகப்பு"
+msgid "Weight"
+msgstr "நிறை"
+msgid "Menu"
+msgstr "பட்டி"

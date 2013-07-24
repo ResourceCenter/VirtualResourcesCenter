@@ -1,0 +1,162 @@
+array(
+  (object) array(
+      'vid' => '6',
+      'uid' => '2',
+      'title' => 'Sample Tool 1',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '1',
+      'sticky' => '0',
+      'nid' => '6',
+      'type' => 'tool',
+      'language' => 'und',
+      'created' => '1339023822',
+      'changed' => '1339023822',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1339023822',
+      'revision_uid' => '1',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => "<p>&nbsp;</p><p style=\"margin: 0px 0px 1em; border: 0px; outline: 0px; vertical-align: baseline; color: rgb(51, 51, 51); font-family: Georgia, 'Times New Roman', Times, serif; line-height: 20px; \">Leading public sector innovators are leveraging Socrata’s purpose-built cloud, platform and social technologies to deliver better citizen access to information, modernize online service delivery and improve internal efficiencies. We call the transformation of your data assets into productive information resources that people can easily access, share and reuse, Open Data.</p>",
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p> Leading public sector innovators are leveraging Socrata’s purpose-built cloud, platform and social technologies to deliver better citizen access to information, modernize online service delivery and improve internal efficiencies. We call the transformation of your data assets into productive information resources that people can easily access, share and reuse, Open Data.</p>\n",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_date_of_last_release' => array(
+        'und' => array(
+          array(
+            'value' => '2012-05-17T06:00:00',
+            'timezone' => 'America/Denver',
+            'timezone_db' => 'UTC',
+            'date_type' => 'date',
+          ),
+        ),
+      ),
+      'field_features' => array(
+        'und' => array(
+          array(
+            'value' => '<p><strong>Make it easy for your organization to publish and manage public data </strong></p><p>You can achieve your organization’s transparency goals, cost-effectively, by streamlining the data publishing process and automating maintenance and updates. Internal stakeholders, in any department or agency, with little or no technical assistance, become first-class data publishers. While administrators manage the organization’s data in one central location, offer constituents a consistent and privately-branded online experience and get real-time data consumption and citizen engagement metrics.</p><p><strong>Maximize the utility of your data assets and make them universally accessible </strong></p><p>Go beyond compliance and put your data to work for all your constituents – technical, non-technical, professional and developer. You only publish the data once, but your constituents consume it in many ways: interactively online, using visualizations, via downloads, through an API, or even over the phone! Even better, they are are empowered to distribute the data online and socially enrich it. With every interaction your data becomes more relevant and useful.</p>',
+            'format' => 'filtered_html',
+            'safe_value' => "<p><strong>Make it easy for your organization to publish and manage public data </strong>You can achieve your organization’s transparency goals, cost-effectively, by streamlining the data publishing process and automating maintenance and updates. Internal stakeholders, in any department or agency, with little or no technical assistance, become first-class data publishers. While administrators manage the organization’s data in one central location, offer constituents a consistent and privately-branded online experience and get real-time data consumption and citizen engagement metrics.<strong>Maximize the utility of your data assets and make them universally accessible </strong>Go beyond compliance and put your data to work for all your constituents – technical, non-technical, professional and developer. You only publish the data once, but your constituents consume it in many ways: interactively online, using visualizations, via downloads, through an API, or even over the phone! Even better, they are are empowered to distribute the data online and socially enrich it. With every interaction your data becomes more relevant and useful.</p>\n",
+          ),
+        ),
+      ),
+      'field_platform' => array(
+        'und' => array(
+          array(
+            'value' => '<p>A web browser</p>',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>A web browser</p>\n",
+          ),
+        ),
+      ),
+      'field_release_notes' => array(),
+      'field_sensitivity' => array(),
+      'field_sponsoring_organization' => array(
+        'und' => array(
+          array(
+            'url' => 'http://civicactions.com/',
+            'title' => 'CivicActions',
+            'attributes' => array(),
+          ),
+        ),
+      ),
+      'field_vrc_taxonomy' => array(),
+      'field_website' => array(
+        'und' => array(
+          array(
+            'url' => 'http://www.socrata.com/',
+            'title' => 'Socrata',
+            'attributes' => array(),
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1339023822',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '1',
+      'comment_count' => '0',
+      'name' => 'admin',
+      'picture' => '0',
+      'data' => 'b:0;',
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+)

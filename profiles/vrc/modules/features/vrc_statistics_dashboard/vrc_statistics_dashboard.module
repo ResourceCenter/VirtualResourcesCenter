@@ -1,0 +1,1318 @@
+<?php
+
+include_once 'vrc_statistics_dashboard.features.inc';
+
+/**
+ * Implements hook_init()
+ */
+function vrc_statistics_dashboard_init() {
+  $path = drupal_get_path('module', 'vrc_statistics_dashboard');
+  drupal_add_js($path . '/js/vrc_statistics_dashboard.js');
+  drupal_add_js($path . '/js/jintervals-0.7.js');
+  highcharts_load_js();
+}
+
+/**
+ * Implements hook_user_insert()
+ * @see: message_example_user_insert()
+ */
+function vrc_statistics_dashboard_user_insert(&$edit, $account, $category) {
+  $message = message_create('user_register', array(), $account);
+  $wrapper = entity_metadata_wrapper('message', $message);
+  $wrapper->field_published->set($account->status);
+  $wrapper->save();
+}
+
+/**
+ * Implements hook_admin_paths()
+ */
+function vrc_statistics_dashboard_admin_paths() {
+  $paths = array(
+    'statistics_dashboard' => TRUE,
+    'statistics_dashboard/*' => TRUE,
+  );
+  return $paths;
+}
+
+/**
+ * Implements hook_theme()
+ */
+function vrc_statistics_dashboard_theme() {
+  $items = array(
+    'vrc_highchart_chart_container' => array(
+      'variables' => array(
+        'id' => NULL,
+        'style' => array(),
+      ),
+    ),
+  );
+ return $items;
+}
+
+/**
+ * Theming function for a Highchart container
+ */
+function theme_vrc_highchart_chart_container($vars) {
+  if ($vars['id']) {
+    $vars['style'] += array(
+      'margin' => '0 auto',
+      'min-width' => '400px',
+      'height' => '400px',
+    );
+
+    // Assemble the CSS style string of the chart
+    $output = '';
+    $i = 0;
+    $style_str = '';
+    foreach ($vars['style'] as $key => $value) {
+      $style_str .= $key . ': ' . $value;
+      $style_str .= (++$i === count($vars['style'])) ? '' : '; ';
+    }
+    $vars['style'] = $style_str;
+    $output  = '<div' . drupal_attributes($vars) . '></div>';
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_block_info()
+ */
+function vrc_statistics_dashboard_block_info() {
+  return array(
+    'vsd_registered_users_dr' => array(
+      'info' => t('[sd] Registered users'),
+    ),
+    'vsd_site_votes_count' => array(
+      'info' => t('[sd] Count of votes'),
+    ),
+    'vsd_search_performed_count' => array(
+      'info' => t('[sd] Count of search performed'),
+    ),
+    'vsd_article_posted_number' => array(
+      'info' => t('[sd] Number of articles posted'),
+    ),
+    'vsd_question_posted_number' => array(
+      'info' => t('[sd] Number of questions posted'),
+    ),
+    'vsd_answer_posted_number' => array(
+      'info' => t('[sd] Number of answers posted'),
+    ),
+    'vsd_question_first_answer_time' => array(
+      'info' => t('[sd] Average answer time for the first answer'),
+    ),
+    'vsd_question_closing_time' => array(
+      'info' => t('[sd] Average time for a question to be resolved'),
+    ),
+    'vsd_closing_answer_author_ratio' => array(
+      'info' => t('[sd] Closing Answer Author Ratio'),
+    ),
+    'vsd_question_resolution_ratio' => array(
+      'info' => t('[sd] Resolution Ratio'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_view()
+ */
+function vrc_statistics_dashboard_block_view($delta) {
+  $block = array();
+  switch ($delta)  {
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    case 'vsd_registered_users_dr':
+      $block['subject'] = t('Registered users');
+
+      // Statistic for the last 30 days
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+      foreach ($days as $timestamp => $day) {
+        $articles = vrc_statistics_dashboard_message_get_daily_articles_by_timestamp($day['timestamp']);
+        $days[$timestamp]['articles'] = $articles;
+      }
+
+
+      $data = vrc_statistics_dashboard_get_registered_users_detail();
+      $data_copy = $data;
+
+      $data_summary = array();
+      foreach($data as $year => $year_data) {
+        foreach ($year_data as $month => $month_data) {
+          $data_summary[$year][$month]['total'] = array_sum($month_data);
+        }
+        $data_summary[$year]['total'] = array_reduce($data_summary[$year], '_vrc_statistics_dashboard_gather_year_total', 0);
+      }
+      drupal_add_js(array('vrc_highcharts' =>
+        array('vrc_sd_registered_users_dr' => array(
+          'data' => $data,
+          'dataSummary' => $data_summary))), 'setting');
+      $block['content'] = theme('vrc_highchart_chart_container', array(
+          'id' => 'vrc_sd_registered_users_dr'));
+      break;
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    case 'vsd_site_votes_count':
+      $block['subject'] = t('Votes on the Platform');
+      $block['content'] = theme('vrc_highchart_chart_container', array(
+          'id' => 'vrc_sd_site_votes_count_chart'));
+
+      // Statistic for the last 30 days
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+      foreach ($days as $timestamp => $day) {
+        $count = vrc_statistics_dashboard_message_get_vote_count_by_timestamp($day['timestamp']);
+        $days[$timestamp]['count'] = $count;
+      }
+
+      $js_data = array(
+        'vrc_highcharts' => array(
+          'vrc_sd_site_votes_count' => array('data' => $days)
+        )
+      );
+      drupal_add_js($js_data, 'setting');
+      break;
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    case 'vsd_search_performed_count':
+      $block['subject'] = t('Number of Searches Performed');
+      $block['content'] = theme('vrc_highchart_chart_container', array(
+          'id' => 'vrc_sd_search_performed_count_chart'));
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+      foreach ($days as $timestamp => $day) {
+        $count = vrc_statistics_dashboard_message_get_daily_search_count_by_timestamp($day['timestamp']);
+        $days[$timestamp]['count'] = $count;
+      }
+
+      $js_data = array('vrc_highcharts' => array(
+        'vrc_sd_search_performed_count' => array('data' => $days)
+      ));
+      drupal_add_js($js_data, 'setting');
+      break;
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    case 'vsd_article_posted_number':
+      $block['subject'] = t('Number of articles posted');
+      $block['content'] = theme('vrc_highchart_chart_container', array(
+          'id' => 'vrc_sd_article_posted_number_chart'));
+
+      // Statistic for the last 30 days
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+      foreach ($days as $timestamp => $day) {
+        $articles = vrc_statistics_dashboard_message_get_daily_articles_by_timestamp($day['timestamp']);
+        $days[$timestamp]['articles'] = $articles;
+      }
+
+      $js_data = array('vrc_highcharts' => array(
+        'vrc_sd_article_posted_number' => array('data' => $days)
+      ));
+      drupal_add_js($js_data, 'setting');
+      break;
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    case 'vsd_question_posted_number':
+      $block['subject'] = t('Number of question posted');
+      $block['content'] = theme('vrc_highchart_chart_container', array(
+          'id' => 'vrc_sd_question_posted_number_chart'));
+
+      // Statistic for the last 30 days
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+      foreach ($days as $timestamp => $day) {
+        $nodes = vrc_statistics_dashboard_message_get_daily_quesitons_by_timestamp($day['timestamp']);
+        $days[$timestamp]['questions'] = $nodes;
+      }
+
+      $js_data = array('vrc_highcharts' => array(
+        'vrc_sd_question_posted_number' => array('data' => $days)
+      ));
+      drupal_add_js($js_data, 'setting');
+      break;
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    case 'vsd_answer_posted_number':
+      $block['subject'] = t('Number of answers posted');
+      $block['content'] = theme('vrc_highchart_chart_container', array(
+          'id' => 'vrc_sd_answer_posted_number_chart'));
+
+      // Statistic for the last 30 days
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+      // Statistic for the last 30 days
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+
+      foreach ($days as $timestamp => $day) {
+        $nodes = vrc_statistics_dashboard_message_get_daily_answers_by_timestamp($day['timestamp']);
+        $days[$timestamp]['answers'] = $nodes;
+      }
+
+      $js_data = array('vrc_highcharts' => array(
+        'vrc_sd_answer_posted_number' => array('data' => $days)
+      ));
+      drupal_add_js($js_data, 'setting');
+      break;
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    case 'vsd_question_first_answer_time':
+      $block['subject'] = t('Averaging answering time for the first answer');
+      $block['content'] = theme('vrc_highchart_chart_container', array(
+          'id' => 'vrc_sd_question_first_answer_time_chart'));
+
+      // Statistic for the last 30 days
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+      foreach ($days as $timestamp => $day) {
+        $result = vrc_statistics_dashboard_message_get_daily_question_gets_first_answer_by_timestamp($day['timestamp']);
+        $days[$timestamp]['duration'] = $result;
+      }
+
+      $js_data = array('vrc_highcharts' => array(
+        'vrc_sd_question_first_answer_time' => array('data' => $days)
+      ));
+      drupal_add_js($js_data, 'setting');
+      break;
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    case 'vsd_question_closing_time':
+      $block['subject'] = t('Average time for questions get resolved');
+      $block['content'] = theme('vrc_highchart_chart_container', array(
+          'id' => 'vrc_sd_question_resolved_time_chart'));
+
+      // Statistic for the last 30 days
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+      foreach ($days as $timestamp => $day) {
+        $result = vrc_statistics_dashboard_load_messages_question_gets_resolved_before($day['timestamp']);
+        $days[$timestamp]['duration'] = NULL;
+        $result = is_array($result) ? array_filter($result) : $result;
+        if (!empty($result)) {
+          // Get the average duration
+          $durations = array();
+          foreach ($result as $message) {
+            $wrapper = entity_metadata_wrapper('message', $message);
+            $value = $wrapper->field_duration->value();
+            if (empty($value)) {
+              continue;
+            }
+            $durations[] = $value;
+          }
+
+          if (!empty($durations)) {
+            $days[$timestamp]['duration'] = (int) vrc_array_avg($durations);
+          }
+        }
+      }
+
+      $js_data = array('vrc_highcharts' => array(
+        'vrc_sd_question_closing_time' => array('data' => $days)
+      ));
+      drupal_add_js($js_data, 'setting');
+      break;
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    case 'vsd_closing_answer_author_ratio':
+      $block['subject'] = t('Closing Answer Author Ratio');
+      $block['content'] = theme('vrc_highchart_chart_container', array(
+        'id' => 'vrc_sd_closing_answer_author_ratio_chart'));
+
+      // Statistic for the last 30 days
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+
+      foreach ($days as $timestamp => $day) {
+        $ratio = vrc_statistics_dashboard_message_get_daily_closing_answer_author_ratio($timestamp);
+        $days[$timestamp] += $ratio;
+      }
+
+      $js_data = array('vrc_highcharts' => array(
+        'vrc_sd_closing_answer_author_ratio' => array('data' => $days)
+      ));
+      drupal_add_js($js_data, 'setting');
+      break;
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    case 'vsd_question_resolution_ratio':
+      $block['subject'] = t('Question Resolution Ratio');
+      $block['content'] = theme('vrc_highchart_chart_container', array(
+        'id' => 'vrc_sd_question_resolution_ratio_chart'));
+
+      // Statistic for the last 30 days
+      $days = vrc_statistics_dashboard_get_last_n_days(30);
+
+      foreach ($days as $timestamp => $day) {
+        $ratio = vrc_statistics_dashboard_message_get_daily_question_resolution_ratio($timestamp);
+        $days[$timestamp] += $ratio;
+      }
+
+      $js_data = array('vrc_highcharts' => array(
+        'vrc_sd_question_resolution_ratio' => array('data' => $days)
+      ));
+      drupal_add_js($js_data, 'setting');
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_boxes_plugins()
+ */
+function vrc_statistics_dashboard_boxes_plugins() {
+  $plugins = array();
+  $path = drupal_get_path('module', 'vrc_statistics_dashboard') . '/plugins';
+  $plugins['highcharts_linechart'] = array(
+    'title' => 'Hightcharts - linechart box',
+    'handler' => array(
+      'parents' => 'box',
+      'class' => 'vrc_statistics_dashboard_highcharts_linechart_box',
+      'file' => 'vrc_statistics_dashboard_highcharts_linechart_box.inc',
+      'path' => $path,
+    ),
+  );
+  return $plugins;
+}
+
+/**
+ * Implements hook_highcharts_linechart_box_options_alter()
+ */
+function vrc_statistics_dashboard_highcharts_linechart_box_options_alter(&$options, boxes_box $box) {
+  switch ($box->delta) {
+    case 'vrc_sd_registered_users':
+      $data = vrc_statistics_dashboard_get_registered_users();
+
+      $options['yAxis']['title']['text'] = t('Registered Count');
+      foreach ($data as $year => $item) {
+        $options['series'][] = array(
+          'name' => $year,
+          'data' => array_map('intval', array_values($item)),
+        );
+      }
+      $options['xAxis']['categories'] = $box->generateMonthNames();
+      break;
+    case 'vrc_sd_registered_users_detail':
+      $data = vrc_statistics_dashboard_get_registered_users_detail();
+      break;
+  }
+}
+
+function vrc_statistics_dashboard_get_registered_users() {
+  // Get the register count from the database
+  $query = db_select('message', 'm');
+  $query->addExpression('COUNT(u.uid)', 'count');
+  $query->addExpression('YEAR(FROM_UNIXTIME(u.created))', 'year');
+  $query->addExpression('MONTH(FROM_UNIXTIME(u.created))', 'month');
+  $query->innerJoin('users', 'u', 'm.uid = u.uid');
+  $query->groupBy('year')->groupBy('month');
+  $result = $query->execute();
+
+  // Group the resulseriests by year and month
+  $grouped_rs = array();
+  while($row = $result->fetchAssoc()) {
+    if (!isset($row['year']) || !isset($row['month'])) {
+      continue;
+    }
+    $grouped_rs[$row['year']][$row['month']] = $row['count'];
+  }
+
+  return $grouped_rs;
+}
+
+function vrc_statistics_dashboard_get_registered_users_detail() {
+  // Get the register count from the database
+  $query = db_select('message', 'm');
+  $query->addExpression('COUNT(u.uid)', 'count');
+  $query->addExpression('YEAR(FROM_UNIXTIME(u.created))', 'year');
+  $query->addExpression('MONTH(FROM_UNIXTIME(u.created))', 'month');
+  $query->addExpression('DAYOFMONTH(FROM_UNIXTIME(u.created))', 'day');
+  $query->innerJoin('users', 'u', 'm.uid = u.uid');
+  $query->groupBy('year')->groupBy('month')->groupBy('day');
+  $result = $query->execute();
+
+  // Group the results by year and month
+  $grouped_rs = array();
+  while($row = $result->fetchAssoc()) {
+    if (!isset($row['year']) || !isset($row['month'])) {
+      continue;
+    }
+    $grouped_rs[$row['year']][$row['month']][$row['day']] = (int)$row['count'];
+  }
+  return $grouped_rs;
+}
+
+/**
+ * array_reduce callback
+ */
+function _vrc_statistics_dashboard_gather_year_total($result, $item) {
+  $result += $item['total'];
+  return $result;
+}
+
+function vrc_statistics_dashboard_get_article_breakdown_by_term( ) {
+  // First select out the tools that have article nodes in it
+}
+
+/**
+ * Implements hook_node_insert()
+ */
+function vrc_statistics_dashboard_node_insert($node) {
+  // When a question got a first answer, create a new message for it
+  if (!empty($node->type) && $node->type == 'answer') {
+    $wrapper = entity_metadata_wrapper('node', $node);
+    $question = $wrapper->field_answer_question->value();
+
+    // The returned answers should exclude the current answer itself
+    $answer_count = vrc_answers_get_answers_count($question->nid);
+    // @TODO: Don't update the message, because the by checking the answer count
+    // is not safe, what if there admin remove all the old answers and after
+    // that the answers posted probably shouldn't considered as the first answer
+    // Keep the update feature here just for easier testing.
+    if ($answer_count == 1) {
+      $loaded_message = vrc_statistics_dashboard_load_message_question_gets_first_answer_by_question($question->nid);
+
+      if ($loaded_message) {
+        $message = $loaded_message;
+      }
+      else {
+        $message = message_create('question_gets_first_answer');
+      }
+
+      $wrapper = entity_metadata_wrapper('message', $message);
+      $wrapper->field_message_question->set($question);
+      $wrapper->field_question_first_answer_time->set($node->created);
+      $duration = $node->created - $question->created;
+      $wrapper->field_duration->set($duration);
+      $wrapper->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_node_update()
+ */
+function vrc_statistics_dashboard_node_update($node) {
+  // When a question gets resolved(has a best answer chosen), create a new
+  // message for this event
+  if ($node->type == 'question') {
+    if (!empty($node->original)) {
+      $new = vrc_answers_get_question_best_answer_nid($node);
+      $old = vrc_answers_get_question_best_answer_nid($node->original);
+
+      // XXX: What if the admin choose the best answer for more than one time?
+      if (!empty($new) && empty($old)) {
+        $loaded_message = vrc_statistics_dashboard_load_message_question_gets_resolved_by_question($node->nid);
+        if ($loaded_message) {
+          $message = $loaded_message;
+        }
+        else {
+          $message = message_create('question_gets_resolved');
+        }
+
+        $now = REQUEST_TIME;
+        $duration = max($now - $question->created, 0);
+
+        $wrapper = entity_metadata_wrapper('message', $message);
+        $wrapper->field_message_question->set($node);
+        $wrapper->field_question_resolved_time->set($now);
+        $wrapper->field_duration->set($duration);
+        $wrapper->save();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_search_api_query_alter()
+ * Log the search activity before the search start
+ */
+function vrc_statistics_dashboard_search_api_query_alter(SearchApiQueryInterface $query) {
+  if (($query->getOption('search id') == 'search_api_views:site_search:page')) {
+    global $user;
+    $message = message_create('site_search', array('uid' => $user->uid));
+    $wrapper = entity_metadata_wrapper('message', $message);
+    $wrapper->save();
+  }
+}
+
+
+################################################################################
+#                            MESSAGE LOAD FUNCTIONS                            #
+################################################################################
+
+/**
+ * Get the 'Articles by Category (daily)' message, given the date and category
+ */
+function vrc_dashboard_statistics_load_message_by_category_and_date($date_string, $tid) {
+  $ts_start = vrc_dashboard_statistics_get_day_start_timestamp($date_string);
+
+  $query = db_select('message', 'm');
+  $query->fields('m', array('mid'));
+  $query->condition('m.type', 'articles_by_category_daily');
+
+  $query->innerJoin('field_data_field_article_category', 'fac', 'm.mid = fac.entity_id');
+  $query->condition('fac.bundle', 'articles_by_category_daily');
+  $query->condition('fac.entity_type', 'message');
+  $query->condition('fac.deleted', 0);
+  $query->condition('fac.field_article_category_tid', $tid);
+
+  $query->innerJoin('field_data_field_message_record_date', 'fd', 'm.mid = fd.entity_id');
+  $query->condition('fd.bundle', 'articles_by_category_daily');
+  $query->condition('fd.entity_type', 'message');
+  $query->condition('fd.deleted', 0);
+  $query->condition('fd.field_message_record_date_value', $ts_start);
+
+  $result = $query->execute()->fetchCol();
+
+  if ($result) {
+    $mid = reset($result);
+    $message = message_load($mid);
+    if ($message) {
+      return $message;
+    }
+    // @todo: Remove possible duplicates?
+  }
+  return;
+}
+
+/**
+ * Load a 'Question Resolution Ration (daily)'(question_resolution_ratio_daily)
+ * message by the date
+ *
+ * @param $timestamp
+ *   The starting UNIX timestamp of that day
+ */
+function _vrc_statistics_dashboard_load_message_question_resolution_ratio_daily($timestamp) {
+  $query = db_select('message', 'm');
+  $query->fields('m', array('mid'));
+  $query->condition('m.type', 'question_resolution_ratio_daily');
+
+  $query->innerJoin('field_data_field_message_record_date', 'fd', 'm.mid = fd.entity_id');
+  $query->condition('fd.bundle', 'question_resolution_ratio_daily');
+  $query->condition('fd.entity_type', 'message');
+  $query->condition('fd.deleted', 0);
+  $query->condition('fd.field_message_record_date_value', $timestamp);
+
+  $result = $query->execute()->fetchCol();
+
+  if ($result) {
+    $mid = reset($result);
+    $message = message_load($mid);
+    if ($message) {
+      return $message;
+    }
+  }
+  return;
+}
+
+/**
+ * Load a message of type 'site_vote_count_daily' by date
+ */
+function vrc_statistics_dashboard_load_message_site_vote_count_daily_by_date($ts_start) {
+  $query = db_select('message', 'm');
+  $query->fields('m', array('mid'));
+  $query->condition('m.type', 'site_vote_count_daily');
+
+  $query->innerJoin('field_data_field_message_record_date', 'fd', 'm.mid = fd.entity_id');
+  $query->condition('fd.bundle', 'site_vote_count_daily');
+  $query->condition('fd.entity_type', 'message');
+  $query->condition('fd.deleted', 0);
+  $query->condition('fd.field_message_record_date_value', $ts_start);
+
+  $result = $query->execute()->fetchCol();
+
+  if ($result) {
+    $mid = reset($result);
+    $message = message_load($mid);
+    if ($message) {
+      return $message;
+    }
+    // @todo: Remove possible duplicates?
+  }
+  return;
+}
+
+/**
+ * Load a message of type 'question_resolution_ratio_by_role_daily' by date
+ */
+function vrc_statistics_dashboard_load_message_question_resolution_ratio_by_role_daily_by_date($ts_start) {
+  $query = db_select('message', 'm');
+  $query->fields('m', array('mid'));
+  $query->condition('m.type', 'question_resolution_ratio_by_role_daily');
+
+  $query->innerJoin('field_data_field_message_record_date', 'fd', 'm.mid = fd.entity_id');
+  $query->condition('fd.bundle', 'question_resolution_ratio_by_role_daily');
+  $query->condition('fd.entity_type', 'message');
+  $query->condition('fd.deleted', 0);
+  $query->condition('fd.field_message_record_date_value', $ts_start);
+
+  $result = $query->execute()->fetchCol();
+
+  if ($result) {
+    $mid = reset($result);
+    $message = message_load($mid);
+    if ($message) {
+      return $message;
+    }
+    // @todo: Remove possible duplicates?
+  }
+  return;
+}
+
+/**
+ * Load a 'Question Gets First Answer'(machine name: question_gets_first_answer)
+ * message by the question field. This is to make sure that every question gets
+ * one message of this type at most
+ *
+ * @param $nid
+ *   The question's node nid
+ *
+ * @return The message loaded
+ */
+function vrc_statistics_dashboard_load_message_question_gets_first_answer_by_question($nid) {
+  $query = db_select('message', 'm');
+  $query->fields('m', array('mid'));
+  $query->condition('m.type', 'question_gets_first_answer');
+
+  $query->innerJoin('field_data_field_message_question', 'fq', 'm.mid = fq.entity_id');
+  $query->condition('fq.bundle', 'question_gets_first_answer');
+  $query->condition('fq.entity_type', 'message');
+  $query->condition('fq.deleted', 0);
+  $query->condition('fq.field_message_question_nid', $nid);
+
+  $result = $query->execute()->fetchCol();
+
+  if ($result) {
+    $mid = reset($result);
+    $message = message_load($mid);
+    if ($message) {
+      return $message;
+    }
+    // @todo: Remove possible duplicates?
+  }
+  return;
+}
+
+/**
+ * Load a 'Question Gets Resolved'(machine name: question_gets_resolved)
+ * message by the question field. This is to make sure that every question gets
+ * one message of this type at most
+ *
+ * @param $nid
+ *   The question's node nid
+ *
+ * @return The message loaded
+ */
+function vrc_statistics_dashboard_load_message_question_gets_resolved_by_question($nid) {
+  $query = db_select('message', 'm');
+  $query->fields('m', array('mid'));
+  $query->condition('m.type', 'question_gets_resolved');
+
+  $query->innerJoin('field_data_field_message_question', 'fq', 'm.mid = fq.entity_id');
+  $query->condition('fq.bundle', 'question_gets_resolved');
+  $query->condition('fq.entity_type', 'message');
+  $query->condition('fq.deleted', 0);
+  $query->condition('fq.field_message_question_nid', $nid);
+
+  $result = $query->execute()->fetchCol();
+
+  if ($result) {
+    $mid = reset($result);
+    $message = message_load($mid);
+    if ($message) {
+      return $message;
+    }
+    // @todo: Remove possible duplicates?
+  }
+  return;
+}
+
+/**
+ * This function load a message by checking the value of the field 'Message
+ * Record Date'(field_message_record_date), so a message type doesn't have this
+ * field, this function won't work
+ */
+function vrc_statistics_dashboard_load_message_by_record_date($message_type, $timestamp) {
+  $query = db_select('message', 'm');
+  $query->fields('m', array('mid'));
+  $query->condition('m.type', $message_type);
+
+  $query->innerJoin('field_data_field_message_record_date', 'fd', 'm.mid = fd.entity_id');
+  $query->condition('fd.bundle', $message_type);
+  $query->condition('fd.entity_type', 'message');
+  $query->condition('fd.deleted', 0);
+  $query->condition('fd.field_message_record_date_value', $timestamp);
+
+  $result = $query->execute()->fetchCol();
+  if ($result) {
+    $mid = reset($result);
+    $message = message_load($mid);
+    if ($message) {
+      return $message;
+    }
+  }
+  return;
+}
+
+/**
+ * Load all messages of type 'question_gets_first_answer', of which the value of
+ * field 'field_question_first_answer_time' is earlier than the given timestamp
+ * @param $timestamp
+ */
+function vrc_statistics_dashboard_load_messages_question_gets_first_answer_before($timestamp) {
+  // Get the timestamp of the day's end
+  $timestamp = strtotime('tomorrow', $timestamp);
+  $message_type = 'question_gets_first_answer';
+  $query = db_select('message', 'm');
+  $query->fields('m', array('mid'));
+  $query->condition('m.type', $message_type);
+
+  $query->innerJoin('field_data_field_question_first_answer_time', 'ff', 'm.mid = ff.entity_id');
+  $query->condition('ff.bundle', $message_type);
+  $query->condition('ff.entity_type', 'message');
+  $query->condition('ff.deleted', 0);
+  $query->condition('ff.field_question_first_answer_time_value', $timestamp, '<=');
+
+  $result = $query->execute()->fetchCol();
+  if ($result) {
+    $result = array_unique($result);
+    $messages = message_load_multiple(array_values($result));
+    return $messages;
+  }
+  return;
+}
+
+/**
+ * Load all messages of type 'question_gets_resolved', of which the value of
+ * field 'field_question_resolved_time' is earlier than the given timestamp
+ * @param $timestamp
+ * @see: admin/structure/messages/manage/question_gets_resolved/fields
+ */
+function vrc_statistics_dashboard_load_messages_question_gets_resolved_before($timestamp) {
+  // Get the timestamp of the day's end
+  $timestamp = strtotime('tomorrow', $timestamp);
+  $message_type = 'question_gets_resolved';
+  $query = db_select('message', 'm');
+  $query->fields('m', array('mid'));
+  $query->condition('m.type', $message_type);
+
+  $query->innerJoin('field_data_field_question_resolved_time', 'frt', 'm.mid = frt.entity_id');
+  $query->condition('frt.bundle', $message_type);
+  $query->condition('frt.entity_type', 'message');
+  $query->condition('frt.deleted', 0);
+  $query->condition('frt.field_question_resolved_time_value', $timestamp, '<=');
+
+  $result = $query->execute()->fetchCol();
+  if ($result) {
+    $result = array_unique($result);
+    $messages = message_load_multiple(array_values($result));
+    return $messages;
+  }
+  return;
+}
+
+################################################################################
+#                            MESSAGE FIELD LOAD FUNCTIONS                      #
+################################################################################
+/**
+ * This gets the the vote count from the recorded message
+ */
+function vrc_statistics_dashboard_message_get_vote_count_by_timestamp($timestamp) {
+  $message_type = 'site_vote_count_daily';
+  $message = vrc_statistics_dashboard_load_message_by_record_date($message_type, $timestamp);
+  if ($message) {
+    $wrapper = entity_metadata_wrapper('message', $message);
+    $count = $wrapper->field_vote_count->value();
+    return (int) $count;
+  }
+  return 0;
+}
+
+/**
+ * This gets the the count of search performed from the recorded message
+ */
+function vrc_statistics_dashboard_message_get_daily_search_count_by_timestamp($timestamp) {
+  $message_type = 'site_search_count_daily';
+  $message = vrc_statistics_dashboard_load_message_by_record_date($message_type, $timestamp);
+
+  if ($message) {
+    $wrapper = entity_metadata_wrapper('message', $message);
+    $count = $wrapper->field_search_count->value();
+    return (int) $count;
+  }
+  return 0;
+}
+
+/**
+ * This get the newly created article nodes of a specific day
+ * @param $timestamp
+ *   The starting timestamp of the day
+ * @param $timestamp
+ *   When the results contain infomation breakdown by category(Category terms)
+ */
+function vrc_statistics_dashboard_message_get_daily_articles_by_timestamp($timestamp, $breakdown = TRUE) {
+  $message_type = 'new_articles_daily';
+  $message = vrc_statistics_dashboard_load_message_by_record_date($message_type, $timestamp);
+  $result = array();
+  if ($message) {
+    $wrapper = entity_metadata_wrapper('message', $message);
+    $nodes = $wrapper->field_message_article_refs->value();
+    // @TODO: What happed if the results are empty?
+    $nodes = array_filter($nodes);
+
+    $result['count'] = $nodes ? count($nodes) : NULL;
+
+    // Breakdown by category
+    if ($nodes && $breakdown) {
+      $grouped = array();
+      // Check the category infomation on each node, and group the nodes by the
+      // category
+      foreach ($nodes as $node) {
+        $node_wrapper = entity_metadata_wrapper('node', $node);
+        foreach ($node_wrapper->field_toolbox_categories->getIterator() as $delta => $term_wrapper) {
+          $term = $term_wrapper->value();
+
+          // Provide default value for each sub array of each category
+          $grouped[$term->tid] = isset($grouped[$term->tid]) ? $grouped[$term->tid] : array();
+          $grouped[$term->tid] += array(
+            'term_name' => $term->name,
+            'term_id' => $term->tid,
+            'nodes' => array(),
+            'count' => 0,
+          );
+          // Prevent a same node being add in the same category many times
+          if (in_array($node->nid, $grouped[$term->tid]['nodes'])) {
+            continue;
+          }
+          $grouped[$term->tid]['nodes'][] = $node->nid;
+        }
+      }
+      // Fill the count infomation for the nodes count in each category
+      array_walk($grouped, create_function('&$item', '$item["count"] = count($item["nodes"]);'));
+      $result['by_category'] = $grouped;
+    }
+  }
+  $result['timestamp'] = $timestamp;
+  return $result;
+}
+
+/**
+ * This get the newly created queston nodes of a specific day
+ * @param $timestamp
+ *   The starting timestamp of the day
+ * @param $timestamp
+ *   When the results contain infomation breakdown by category(Category term)
+ *   and tool term
+ */
+function vrc_statistics_dashboard_message_get_daily_quesitons_by_timestamp($timestamp, $breakdown = TRUE) {
+  $message_type = 'new_questions_daily';
+  $message = vrc_statistics_dashboard_load_message_by_record_date($message_type, $timestamp);
+  $result = array();
+  if ($message) {
+    $wrapper = entity_metadata_wrapper('message', $message);
+    $nodes = $wrapper->field_message_question_refs->value();
+    $result['count'] = $nodes ? count($nodes) : NULL;
+
+    // Breakdown by category
+    if ($nodes && $breakdown) {
+      $grouped_by_category = $grouped_by_tool = array();
+      // Check the category infomation on each node, and group the nodes by the
+      // category
+      foreach ($nodes as $node) {
+        $node_wrapper = entity_metadata_wrapper('node', $node);
+
+        // (1). Break down by 'Categories'(taxonomy_categories) term
+        foreach ($node_wrapper->field_toolbox_categories->getIterator() as $delta => $term_wrapper) {
+          $term = $term_wrapper->value();
+
+          // Provide default value for each sub array of each category
+          $grouped_by_category[$term->tid] = isset($grouped_by_category[$term->tid]) ? $grouped_by_category[$term->tid] : array();
+          $grouped_by_category[$term->tid] += array(
+            'term_name' => $term->name,
+            'term_id' => $term->tid,
+            'nodes' => array(),
+            'count' => 0,
+          );
+          // Prevent a same node being add in the same category many times
+          if (in_array($node->nid, $grouped_by_category[$term->tid]['nodes'])) {
+            continue;
+          }
+          $grouped_by_category[$term->tid]['nodes'][] = $node->nid;
+        }
+
+
+        // (2). Break down by 'Tool'(tool) terms
+        foreach ($node_wrapper->field_tool->getIterator() as $delta => $term_wrapper) {
+          $term = $term_wrapper->value();
+
+          // Provide default value for each sub array of each category
+          $grouped_by_tool[$term->tid] = isset($grouped_by_tool[$term->tid]) ? $grouped_by_tool[$term->tid] : array();
+          $grouped_by_tool[$term->tid] += array(
+            'term_name' => $term->name,
+            'term_id' => $term->tid,
+            'nodes' => array(),
+            'count' => 0,
+          );
+          // Prevent a same node being add in the same category many times
+          if (in_array($node->nid, $grouped_by_tool[$term->tid]['nodes'])) {
+            continue;
+          }
+          $grouped_by_tool[$term->tid]['nodes'][] = $node->nid;
+        }
+      }
+
+      // Fill the count infomation for the nodes count in each category
+      array_walk($grouped_by_category, create_function('&$item', '$item["count"] = count($item["nodes"]);'));
+      array_walk($grouped_by_tool, create_function('&$item', '$item["count"] = count($item["nodes"]);'));
+      $result['by_category'] = $grouped_by_category;
+      $result['by_tool'] = $grouped_by_tool;
+    }
+  }
+  $result['timestamp'] = $timestamp;
+  return $result;
+}
+
+/**
+ * This get the newly posted answers of a specific day
+ * @param $timestamp
+ *   The starting timestamp of the day
+ * @param $breakdown
+ *   Whehther the results contain infomation breakdown by questions
+ */
+function vrc_statistics_dashboard_message_get_daily_answers_by_timestamp($timestamp, $breakdown = TRUE) {
+  $message_type = 'new_answers_daily';
+  $message = vrc_statistics_dashboard_load_message_by_record_date($message_type, $timestamp);
+
+  $result = array();
+  if ($message) {
+    $wrapper = entity_metadata_wrapper('message', $message);
+    $nodes = $wrapper->field_message_answer_refs->value();
+    $result['count'] = $nodes ? count($nodes) : NULL;
+
+    if ($nodes && $breakdown) {
+      $grouped_by_question = array();
+      // Check the question infomation on each node, and group the nodes by the
+      // question
+      foreach ($nodes as $node) {
+        $node_wrapper = entity_metadata_wrapper('node', $node);
+        // This is a single value field, so only one result returned at most
+        $question = $node_wrapper->field_answer_question->value();
+
+        // Break down by 'Question' node
+        // Provide default value for each sub array of each question category
+        if (!isset($grouped_by_question[$question->nid])) {
+          $grouped_by_question[$question->nid] = array();
+        }
+        $grouped_by_question[$question->nid] += array(
+          'question_nid' => $question->nid,
+          'question_title' => $question->title,
+          'answers' => array(),
+          'count' => 0,
+        );
+
+        // Prevent a same node being add in the same category many times
+        if (in_array($node->nid, $grouped_by_question[$question->nid]['answers'])) {
+          continue;
+        }
+        else {
+          $grouped_by_question[$question->nid]['answers'][] = $node->nid;
+        }
+      }
+      // Fill the count infomation for the nodes count in each category
+      array_walk($grouped_by_question, create_function('&$item', '$item["count"] = count($item["answers"]);'));
+      $result['by_question'] = $grouped_by_question;
+    }
+  }
+  $result['timestamp'] = $timestamp;
+  return $result;
+}
+
+/**
+ * This get the newly created article nodes of a specific day
+ * @param $timestamp
+ *   The starting timestamp of the day
+ * @param $timestamp
+ *   When the results contain infomation breakdown by category(Category terms)
+ */
+
+/**
+ * This gets the current average time for a question to have it's first answer.
+ * @param $timestamp
+ *   The starting timestamp of the day
+ */
+function vrc_statistics_dashboard_message_get_daily_question_gets_first_answer_by_timestamp($timestamp) {
+  $message_type = 'question_gets_first_answer';
+  $messages = vrc_statistics_dashboard_load_messages_question_gets_first_answer_before($timestamp);
+
+  if ($messages) {
+    $sum = 0;
+    foreach ($messages as $message) {
+      $wrapper = entity_metadata_wrapper('message', $message);
+      $sum += $wrapper->field_duration->value();
+    }
+    $avg = $sum / count($messages);
+  }
+  else {
+    $avg = 0;
+  }
+
+  // Remove this after testing
+  return abs($avg);
+}
+
+/**
+ * This gets the summary of the closing answer author ratio for a specific day
+ */
+function vrc_statistics_dashboard_message_get_daily_closing_answer_author_ratio($timestamp) {
+  // TODO: Probably change this to something like
+  // 'closing_answer_author_ratio_daily' makes more sense
+  $message_type = 'question_resolution_ratio_by_role_daily';
+  $message = vrc_statistics_dashboard_load_message_by_record_date($message_type, $timestamp);
+
+  $result = array(
+    'n_user_cnt' => 0,
+    's_user_cnt' => 0,
+    'ratio' => 0,
+    'timestamp' => $timestamp,
+  );
+
+  if ($message && is_a($message, 'Message')) {
+    $wrapper = entity_metadata_wrapper('message', $message);
+    $n_user_cnt = (int) $wrapper->field_by_normal_users_count->value();
+    $s_user_cnt = (int) $wrapper->field_by_system_users_count->value();
+
+    $result['n_user_cnt'] = mt_rand(1, 100);
+    $result['s_user_cnt'] = mt_rand(1, 100);
+    $result['ratio'] = mt_rand(1, 10);
+  }
+  return $result;
+}
+
+/**
+ * This gets the summary of the question resoltion ratio for a specific day
+ *
+ * @return
+ *  An array containing the count of resolved and unresolved questions, the
+ *  resolution ratio
+ */
+function vrc_statistics_dashboard_message_get_daily_question_resolution_ratio($timestamp) {
+  $message_type = 'question_resolution_ratio_daily';
+  $message = vrc_statistics_dashboard_load_message_by_record_date($message_type, $timestamp);
+
+  $result = array(
+    'cnt_resolved' => 0,
+    'cnt_unresolved' => 0,
+    'ratio' => 0,
+    'timestamp' => $timestamp,
+  );
+
+  if ($message && is_a($message, 'Message')) {
+    $wrapper = entity_metadata_wrapper('message', $message);
+    $cnt_resolved = (int) $wrapper->field_resolved_question_count->value();
+    $cnt_unresolved = (int) $wrapper->field_unresolved_question_count->value();
+
+    $result['cnt_resolved'] = mt_rand(1, 100);
+    $result['cnt_unresolved'] = mt_rand(1, 100);
+    $result['ratio'] = mt_rand(1, 10);
+  }
+  return $result;
+}
+
+/**
+ * This gets the current average time for a question to get resolved
+ * @param $timestamp
+ *   The starting timestamp of the day
+ */
+function vrc_statistics_dashboard_message_get_daily_question_gets_resolved_by_timestamp() {
+  $message_type = 'question_gets_resolved';
+  $messages = vrc_statistics_dashboard_load_messages_question_gets_first_answer_before($timestamp);
+
+  if ($messages) {
+    $sum = 0;
+    foreach ($messages as $message) {
+      $wrapper = entity_metadata_wrapper('message', $message);
+      $sum += $wrapper->field_duration->value();
+    }
+    $avg = $sum / count($messages);
+  }
+  else {
+    $avg = 0;
+  }
+
+  // Remove this after testing
+  return abs($avg);
+}
+
+################################################################################
+#                            HELPER FUNCTIONS                                  #
+################################################################################
+
+function vrc_array_avg($array, $precision = 0) {
+  $cuantos = count($array);
+  return round(array_sum($array) / $cuantos, $precision);
+}
+
+function vrc_statistics_dashboard_break_down_nodes_by_category($nodes) {
+
+
+}
+
+/**
+ * Return the start timestamp (Y-m-d 00:00:00) of a specific day
+ * @param $date_string
+ */
+function vrc_dashboard_statistics_get_day_start_timestamp($date_string) {
+  $timestamp = strtotime('today', strtotime($date_string));
+  // echo date('Y-m-d H:i:s', $timestamp) . "\n";
+  return $timestamp;
+}
+
+/**
+ * Return the end timestamp(Y-m-d 23:59:59) of a specific day
+ */
+function vrc_dashboard_statistics_get_day_end_timestamp($date_string) {
+  $timestamp = strtotime('tomorrow', strtotime($date_string)) - 1;
+  // echo date('Y-m-d H:i:s', $timestamp) . "\n";
+  return $timestamp;
+}
+
+function vrc_dashboard_statistics_get_today_start_timestamp() {
+  return strtotime(date("Y-m-d 00:00:00"));
+}
+
+function vrc_dashboard_statistics_get_today_end_timestamp() {
+  return strtotime(date("Y-m-d 23:59:59"));
+}
+
+/**
+ * Get the last day(yesterday)'s start timestamp of a specific day
+ */
+function _vrc_statistics_dashboard_get_yesterday_start_timestamp($ts) {
+  return strtotime('yesterday', strtotime('midnight', $ts)) - 1;
+}
+
+/**
+ * Get the last day(yesterday)'s end timestamp of a specific day
+ */
+function _vrc_statistics_dashboard_get_yesterday_end_timestamp($ts) {
+  return strtotime('midnight', $ts);
+}
+
+/**
+ * Get all the terms within a vocabulary
+ */
+function vrc_statistics_dashboard_get_terms_by_vid($vid) {
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'taxonomy_term')
+    ->propertyCondition('vid', (int) $vid, '=')
+    ->execute();
+  return $result['taxonomy_term'];
+}
+
+
+function vrc_statistics_get_new_questions_of_day() {
+
+}
+
+/**
+ * Get the number of questions that's unresolved
+ */
+function vrc_statistics_dashboard_get_unresolved_questions_count() {
+  $resolved_questions = vrc_statistics_dashboard_get_resolved_questions_nids();
+  $query = db_select('node', 'n');
+  $query->addExpression('COUNT(n.nid)', 'count');
+  $query->condition('n.type', 'question');
+  $query->condition('n.status', 1);
+  $query->condition('n.nid', $resolved_questions, 'NOT IN');
+  $count = $query->execute()->fetchField();
+  return ($count) ? (int) $count : 0;
+}
+
+/**
+ * Get the number of questions that's resolved
+ */
+function vrc_statistics_dashboard_get_resolved_questions_nids() {
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node');
+  $query->entityCondition('bundle', 'question');
+  $query->deleted(FALSE);
+  $query->fieldCondition('field_best_answer', 'nid', 'NULL', '!=');
+  $result = $query->execute();
+
+  if ($result) {
+    return array_unique(array_keys($result['node']));
+  }
+  return array();
+}
+
+/**
+ * Get the total count of quesiton nodes
+ */
+function vrc_statistics_dashboard_get_questions_count() {
+  $query = db_select('node', 'n');
+  $query->addExpression('COUNT(n.nid)', 'count');
+  $query->condition('n.type', 'question');
+  $query->condition('n.status', 1);
+  $count = $query->execute()->fetchField();
+  return ($count) ? (int) $count : 0;
+}
+
+/**
+ * Get the votes of a time range
+ */
+function vrc_statistics_dashboard_get_vote_count_in_time_range($start, $end) {
+  $query = db_select('votingapi_vote', 'v');
+  $query->addExpression('COUNT(vote_id)', 'count');
+  $ts_and = db_and();
+  $ts_and->condition('v.timestamp', $start, '>=');
+  $ts_and->condition('v.timestamp', $end, '<=');
+  $query->condition($ts_and);
+  $count = $query->execute()->fetchField();
+
+  return $count ? (int) $count : 0;
+}
+
+/**
+ * Check if a users is a normal user
+ *
+ * Support managers and admins are considered not normal users
+ */
+function vrs_statistic_dashboard_is_normal_user($user) {
+  if (is_numeric($user)) {
+    $user = user_load($user);
+  }
+
+  if ($user->uid == 1) {
+    return FALSE;
+  }
+
+  // @TODO: Finish
+}
+
+/**
+ * Get the nodes of a specific type created in a time range
+ */
+function vrs_statistic_dashboard_get_nodes_in_time_range($type, $ts_start, $ts_end, $load_object = TRUE) {
+  $query = db_select('node', 'n');
+  $query->fields('n', array('nid'));
+  $ts_and = db_and();
+  $ts_and->condition('n.created', $ts_start, '>=');
+  $ts_and->condition('n.created', $ts_end, '<=');
+  $query->condition($ts_and);
+  $query->condition('n.type', $type);
+  $result = $query->execute()->fetchCol();
+  $nids = array_unique($result);
+  if ($load_object) {
+    return node_load_multiple($nids);
+  }
+  return $nids;
+}
+
+/**
+ * Get an array representing the last 30 days
+ * @see: http://www.php.net/manual/en/datetime.formats.relative.php
+ */
+function vrc_statistics_dashboard_get_last_n_days($n = 30, $asc = TRUE) {
+  $days = array();
+  for($i = 1; $i <= $n; $i++) {
+    // The prepened 'today' is used to reset the base to 00:00:00
+    $timestamp = strtotime('today - ' . $i . 'day');
+    $days[$timestamp] = array(
+        // The timestamp of the day's start
+        'timestamp' => $timestamp,
+        // A short name of the date, containing only month and day names
+        'name_short' => date('M/j', $timestamp),
+    );
+    // dpm(date('Y-m-d H-i-s', $timestamp)); // Use this for debugging
+  }
+  return $asc ? array_reverse($days, TRUE) : $days;
+}

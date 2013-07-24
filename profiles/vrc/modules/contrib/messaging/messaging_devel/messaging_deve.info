@@ -1,0 +1,11 @@
+name = Messaging devel
+description = Debugging and development utilities for messaging package.
+package = "Development"
+dependencies[] = messaging
+core = 6.x
+
+; Information added by drush on 2013-01-31
+version = "32e414b"
+project = "messaging"
+datestamp = "1359603871"
+

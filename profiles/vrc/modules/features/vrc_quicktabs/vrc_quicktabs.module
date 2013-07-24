@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Quicktabs feature feature.
+ */
+
+include_once 'vrc_quicktabs.features.inc';

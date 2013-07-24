@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the vrc_documentation feature.
+ */
+
+include_once 'vrc_documentation.features.inc';

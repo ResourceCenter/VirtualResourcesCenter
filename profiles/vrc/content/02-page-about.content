@@ -1,0 +1,117 @@
+array(
+  (object) array(
+      'vid' => '1',
+      'uid' => '2',
+      'title' => 'About VRC',
+      'log' => '',
+      'status' => '1',
+      'comment' => '1',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '1',
+      'type' => 'page',
+      'language' => 'und',
+      'created' => '1338933318',
+      'changed' => '1338935589',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1338935589',
+      'revision_uid' => '1',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => '<p>Placeholder for About text</p><p>Efficiently reinvent frictionless total linkage and client-focused niches. Uniquely grow multidisciplinary solutions after global niches. Holisticly generate bleeding-edge networks for best-of-breed methods of empowerment. Objectively target plug-and-play channels vis-a-vis alternative alignments. Phosfluorescently transition multifunctional customer service after clicks-and-mortar markets. Distinctively implement technically sound architectures through mission-critical collaboration and idea-sharing. Monotonectally embrace cooperative results for cross-platform platforms. Authoritatively strategize backend content whereas end-to-end processes. Intrinsicly myocardinate enterprise-wide systems via scalable human capital. Globally productize global services via world-class human capital. Progressively mesh client-centered interfaces through enterprise-wide imperatives. Proactively incubate corporate collaboration and idea-sharing for distributed e-tailers. Objectively impact fully tested customer service with intuitive content. Efficiently negotiate flexible testing procedures for maintainable e-business. Credibly exploit intermandated potentialities for state of the art process improvements. Continually coordinate client-centered imperatives through distributed architectures. Objectively enable adaptive best practices without process-centric intellectual capital. Objectively maximize 24/7 interfaces vis-a-vis extensible quality vectors.</p>',
+            'summary' => '',
+            'format' => 'full_html',
+            'safe_value' => "<p>Efficiently reinvent frictionless total linkage and client-focused niches. Uniquely grow multidisciplinary solutions after global niches. Holisticly generate bleeding-edge networks for best-of-breed methods of empowerment. Objectively target plug-and-play channels vis-a-vis alternative alignments. Phosfluorescently transition multifunctional customer service after clicks-and-mortar markets. Distinctively implement technically sound architectures through mission-critical collaboration and idea-sharing. Monotonectally embrace cooperative results for cross-platform platforms. Authoritatively strategize backend content whereas end-to-end processes. Intrinsicly myocardinate enterprise-wide systems via scalable human capital. Globally productize global services via world-class human capital. Progressively mesh client-centered interfaces through enterprise-wide imperatives. Proactively incubate corporate collaboration and idea-sharing for distributed e-tailers. Objectively impact fully tested customer service with intuitive content. Efficiently negotiate flexible testing procedures for maintainable e-business. Credibly exploit intermandated potentialities for state of the art process improvements. Continually coordinate client-centered imperatives through distributed architectures. Objectively enable adaptive best practices without process-centric intellectual capital. Objectively maximize 24/7 interfaces vis-a-vis extensible quality vectors.</p>\n",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1338933318',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '2',
+      'comment_count' => '0',
+      'name' => 'editor',
+      'picture' => '0',
+      'data' => NULL,
+      'path' => array(
+        'pid' => '1',
+        'source' => 'node/1',
+        'alias' => 'about',
+        'language' => 'und',
+      ),
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+)

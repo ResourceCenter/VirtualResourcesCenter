@@ -1,0 +1,65 @@
+/* Theme Settings CSS
+   This is crafted to work with Seven and AT Admin themes, 
+   other admin themes could spit the dummy with these styles. */
+
+/* Layout settings */
+.at-layout-form div.form-item {
+  float: right;
+  margin-right: 0;
+  margin-left: 25px;
+}
+
+fieldset.at-media-queries div.form-item {
+  margin-left: 0;
+}
+
+fieldset.at-layout-form div.form-type-radio {
+  float: right;
+  margin: 0 0 10px 30px;
+}
+
+fieldset.at-layout-form div.form-type-radio label,
+div.smartphone-portrait-layout  {
+  background: url(images/layouts-rtl.png) right;
+}
+#edit-bigscreen-layout-wrapper .form-type-radio label[for=edit-bigscreen-layout-three-col-grail],
+#edit-tablet-landscape-layout-wrapper .form-type-radio  label[for=edit-tablet-landscape-layout-three-col-grail]  {
+  background-position: 100% 0;
+}
+#edit-bigscreen-layout-wrapper .form-type-radio label[for=edit-bigscreen-layout-three-col-right],
+#edit-tablet-landscape-layout-wrapper .form-type-radio  label[for=edit-tablet-landscape-layout-three-col-right]  {
+  background-position: 100% -80px;
+}
+#edit-bigscreen-layout-wrapper .form-type-radio label[for=edit-bigscreen-layout-three-col-left],
+#edit-tablet-landscape-layout-wrapper .form-type-radio  label[for=edit-tablet-landscape-layout-three-col-left]  {
+  background-position: 100% -160px;
+}
+#edit-tablet-landscape-layout-wrapper .form-type-radio  label[for=edit-tablet-landscape-layout-two-col-stack],
+#edit-tablet-portrait-layout-wrapper .form-type-radio  label[for=edit-tablet-portrait-layout-two-col-stack]  {
+  background-position: 100% -240px;
+}
+#edit-tablet-portrait-layout-wrapper .form-type-radio  label[for=edit-tablet-portrait-layout-one-col-vert],
+#edit-smartphone-landscape-layout-wrapper .form-type-radio label[for=edit-smartphone-landscape-layout-one-col-vert]  {
+  background-position: 100% -320px;
+}
+#edit-tablet-portrait-layout-wrapper .form-type-radio  label[for=edit-tablet-portrait-layout-one-col-stack],
+#edit-smartphone-landscape-layout-wrapper .form-type-radio label[for=edit-smartphone-landscape-layout-one-col-stack],
+div.smartphone-portrait-layout  {
+  background-position: 100% -400px;
+}
+div.smartphone-portrait-layout  {
+  float: right;
+  margin: 15px 0 0 15px;
+}
+
+#edit-debug p.warning {
+  background: url(images/warning.png) no-repeat right center;
+  padding-left: 0;
+  padding-right: 25px;
+}
+
+/* Heading styles for advanced themes */
+#edit-headings .form-type-radios {
+  float: right;
+}
+

@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * Implements hook_requirements().
+ */
+function highcharts_requirements($phase) {
+  $requirements = array();
+  // Ensure translations do not break at install time.
+  $t = get_t();
+
+  // Check only during runtime, as during the install phase Libraries may not be
+  // enabled (for example when Highcharts is a dependency of another module or
+  // installation profile).
+  if ($phase == 'runtime') {
+    $requirements['highcharts'] = array(
+      'title' => $t('Highcharts Library'),
+    );
+
+    // Ensure highcharts library is installed.
+    $libraries = libraries_get_libraries();
+    if (isset($libraries['highcharts'])) {
+      $requirements['highcharts']['value'] = $t('Installed');
+      $requirements['highcharts']['severity'] = REQUIREMENT_OK;
+    }
+    else {
+      $requirements['highcharts']['value'] = $t('Not Installed');
+      $requirements['highcharts']['severity'] = REQUIREMENT_ERROR;
+      $requirements['highcharts']['description'] = $t('The Highcharts library was not installed. Please download the Highcharts library (%url).', array('%url' => 'http://www.highcharts.com/download'));
+    }
+  }
+
+  return $requirements;
+}

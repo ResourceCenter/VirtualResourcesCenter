@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the VRC Facebook Comment feature.
+ */
+
+include_once 'vrc_facebook_comment.features.inc';

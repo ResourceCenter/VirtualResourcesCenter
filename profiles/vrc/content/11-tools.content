@@ -1,0 +1,440 @@
+array(
+  (object) array(
+      'vid' => '10',
+      'uid' => '4',
+      'title' => 'Freedom Fone',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '10',
+      'type' => 'tool',
+      'language' => 'und',
+      'created' => '1337953408',
+      'changed' => '1337953408',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1337953408',
+      'revision_uid' => '4',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => '<p>Freedom Fone is free software that creates interactive, voice-based communication services for organisations or bodies&nbsp;seeking to engage with communities across mobile networks.&nbsp;</p><p>Freedom Fone uses voice menus to share information with any target audience, SMS polls to organise opinion surveys and callers can also leave voice and text messages on the service where call data records can be safely stored, organised and evaluated. &nbsp;</p><p>There are no geographical limitations to Freedom Fone.&nbsp;By taking advantage of both audio and text functions, Freedom Fone makes it easy to create and share information across literacy barriers in any language.&nbsp;We provide an&nbsp;effective, user-friendly and low-cost solution that helps empower marginalised communities and bridge the digital divide.</p>',
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>Freedom Fone is free software that creates interactive, voice-based communication services for organisations or bodies seeking to engage with communities across mobile networks. </p>\n<p>Freedom Fone uses voice menus to share information with any target audience, SMS polls to organise opinion surveys and callers can also leave voice and text messages on the service where call data records can be safely stored, organised and evaluated.  </p>\n<p>There are no geographical limitations to Freedom Fone. By taking advantage of both audio and text functions, Freedom Fone makes it easy to create and share information across literacy barriers in any language. We provide an effective, user-friendly and low-cost solution that helps empower marginalised communities and bridge the digital divide.</p>",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_sponsoring_organization' => array(
+        'und' => array(
+          array(
+            'url' => 'http://www.kubatana.net/',
+            'title' => 'Kubatana',
+            'attributes' => array(),
+          ),
+        ),
+      ),
+      'field_website' => array(
+        'und' => array(
+          array(
+            'url' => 'http://www.freedomfone.org/page/downloads',
+            'title' => 'Freedom Fone',
+            'attributes' => array(),
+          ),
+        ),
+      ),
+      'field_date_of_last_release' => array(),
+      'field_features' => array(),
+      'field_platform' => array(
+        'und' => array(
+          array(
+            'value' => '<p>Web based</p>',
+            'format' => 'filtered_html',
+            'safe_value' => '<p>Web based</p>',
+          ),
+        ),
+      ),
+      'field_release_notes' => array(),
+      'field_vrc_taxonomy' => array(
+        'und' => array(
+          array(
+            'tid' => '1',
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1337953408',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '4',
+      'comment_count' => '0',
+      'name' => 'qa-admin',
+      'picture' => '0',
+      'data' => NULL,
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+  (object) array(
+      'vid' => '8',
+      'uid' => '4',
+      'title' => 'Kiwix',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '8',
+      'type' => 'tool',
+      'language' => 'und',
+      'created' => '1337950404',
+      'changed' => '1337950590',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1337950590',
+      'revision_uid' => '4',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => '<p><b>Kiwix</b> is an offline reader for Web content. It&#39;s especially intended to make Wikipedia available offline (see <span class="mw-redirect">features</span>). This is done by reading the content of the project stored in a file format ZIM, a high compressed open format with additional meta-data.</p><p>Kiwix is a <a class="external text" href="http://en.wikipedia.org/wiki/Free_software" rel="nofollow">free software</a> (<a class="external text" href="https://kiwix.svn.sourceforge.net/svnroot/kiwix/moulinkiwix/COPYING" rel="nofollow">GPL3</a>), that means you can freely copy, modify and spread it.</p>',
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>Kiwix is an offline reader for Web content. It's especially intended to make Wikipedia available offline (see features). This is done by reading the content of the project stored in a file format ZIM, a high compressed open format with additional meta-data.</p>\n<p>Kiwix is a <a class=\"external text\" href=\"http://en.wikipedia.org/wiki/Free_software\" rel=\"nofollow\">free software</a> (<a class=\"external text\" href=\"https://kiwix.svn.sourceforge.net/svnroot/kiwix/moulinkiwix/COPYING\" rel=\"nofollow\">GPL3</a>), that means you can freely copy, modify and spread it.</p>",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_sponsoring_organization' => array(
+        'und' => array(
+          array(
+            'url' => 'http://kiwix.org',
+            'title' => 'OpenZim',
+            'attributes' => array(),
+          ),
+        ),
+      ),
+      'field_website' => array(
+        'und' => array(
+          array(
+            'url' => 'http://sourceforge.net/projects/kiwix/files/latest/download?source=files',
+            'title' => 'Kiwix',
+            'attributes' => array(),
+          ),
+        ),
+      ),
+      'field_date_of_last_release' => array(),
+      'field_features' => array(),
+      'field_platform' => array(
+        'und' => array(
+          array(
+            'value' => '<p>OSx, Windows, Linux (Ubuntu, Gentoo, ArchLinux, Sugar)</p>',
+            'format' => 'filtered_html',
+            'safe_value' => '<p>OSx, Windows, Linux (Ubuntu, Gentoo, ArchLinux, Sugar)</p>',
+          ),
+        ),
+      ),
+      'field_release_notes' => array(),
+      'field_vrc_taxonomy' => array(
+        'und' => array(
+          array(
+            'tid' => '14',
+          ),
+        ),
+      ),
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1337950404',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '4',
+      'comment_count' => '0',
+      'name' => 'qa-admin',
+      'picture' => '0',
+      'data' => NULL,
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+  (object) array(
+      'vid' => '5',
+      'uid' => '1',
+      'title' => 'Drupal, A CMS',
+      'log' => '',
+      'status' => '1',
+      'comment' => '2',
+      'promote' => '0',
+      'sticky' => '0',
+      'nid' => '5',
+      'type' => 'tool',
+      'language' => 'und',
+      'created' => '1337912226',
+      'changed' => '1337912226',
+      'tnid' => '0',
+      'translate' => '0',
+      'revision_timestamp' => '1337912226',
+      'revision_uid' => '1',
+      'body' => array(
+        'und' => array(
+          array(
+            'value' => '<p>Drupal is a CMS.&nbsp;</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
+            'summary' => '',
+            'format' => 'filtered_html',
+            'safe_value' => "<p>Drupal is a CMS. </p>\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>\n<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>",
+            'safe_summary' => '',
+          ),
+        ),
+      ),
+      'field_sponsoring_organization' => array(
+        'und' => array(
+          array(
+            'url' => 'http://drupal.org',
+            'title' => 'Drupal.org',
+            'attributes' => array(),
+          ),
+        ),
+      ),
+      'field_website' => array(
+        'und' => array(
+          array(
+            'url' => 'http://drupal.org',
+            'title' => 'Drupal',
+            'attributes' => array(),
+          ),
+        ),
+      ),
+      'field_date_of_last_release' => array(),
+      'field_features' => array(),
+      'field_platform' => array(),
+      'field_release_notes' => array(
+        'und' => array(
+          array(
+            'value' => 'Release notes',
+            'format' => NULL,
+            'safe_value' => 'Release notes',
+          ),
+        ),
+      ),
+      'field_vrc_taxonomy' => array(),
+      'rdf_mapping' => array(
+        'rdftype' => array(
+          'sioc:Item',
+          'foaf:Document',
+        ),
+        'title' => array(
+          'predicates' => array(
+            'dc:title',
+          ),
+        ),
+        'created' => array(
+          'predicates' => array(
+            'dc:date',
+            'dc:created',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'changed' => array(
+          'predicates' => array(
+            'dc:modified',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+        'body' => array(
+          'predicates' => array(
+            'content:encoded',
+          ),
+        ),
+        'uid' => array(
+          'predicates' => array(
+            'sioc:has_creator',
+          ),
+          'type' => 'rel',
+        ),
+        'name' => array(
+          'predicates' => array(
+            'foaf:name',
+          ),
+        ),
+        'comment_count' => array(
+          'predicates' => array(
+            'sioc:num_replies',
+          ),
+          'datatype' => 'xsd:integer',
+        ),
+        'last_activity' => array(
+          'predicates' => array(
+            'sioc:last_activity_date',
+          ),
+          'datatype' => 'xsd:dateTime',
+          'callback' => 'date_iso8601',
+        ),
+      ),
+      'cid' => '0',
+      'last_comment_timestamp' => '1337912226',
+      'last_comment_name' => NULL,
+      'last_comment_uid' => '1',
+      'comment_count' => '0',
+      'name' => 'admin',
+      'picture' => '0',
+      'data' => 'b:0;',
+      'path' => FALSE,
+      'menu' => array(
+        'link_title' => '',
+        'mlid' => 0,
+        'plid' => 0,
+        'menu_name' => 'main-menu',
+        'weight' => 0,
+        'options' => array(),
+        'module' => 'menu',
+        'expanded' => 0,
+        'hidden' => 0,
+        'has_children' => 0,
+        'customized' => 0,
+        'parent_depth_limit' => 8,
+        'description' => '',
+        'enabled' => 1,
+      ),
+      'node_export_drupal_version' => '7',
+    ),
+)

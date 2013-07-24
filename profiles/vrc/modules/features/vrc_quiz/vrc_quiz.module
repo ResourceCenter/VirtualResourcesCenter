@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the vrc_quiz feature.
+ */
+
+include_once 'vrc_quiz.features.inc';

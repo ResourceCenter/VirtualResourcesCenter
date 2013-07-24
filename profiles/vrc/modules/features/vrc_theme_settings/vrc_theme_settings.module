@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the VRC Theme Settings feature.
+ */
+
+include_once 'vrc_theme_settings.features.inc';

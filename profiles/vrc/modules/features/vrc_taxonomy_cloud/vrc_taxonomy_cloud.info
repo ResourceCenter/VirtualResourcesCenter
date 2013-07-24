@@ -1,0 +1,15 @@
+name = VRC Taxonomy Cloud
+description = Taxonomy cloud and term list function
+core = 7.x
+package = VRC
+php = 5.2.4
+version = 7.x-1.0
+project = vrc_taxonomy_cloud
+dependencies[] = ctools
+dependencies[] = taxonomy
+dependencies[] = views
+dependencies[] = vrc_taxonomy
+features[ctools][] = views:views_default:3.0
+features[features_api][] = api:2
+features[views_view][] = vrc_taxonomy_cloud
+features[views_view][] = what_is_the_vrc

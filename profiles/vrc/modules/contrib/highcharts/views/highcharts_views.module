@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * Implements hook_views_api().
+ */
+function highcharts_views_views_api() {
+  return array(
+    'api' => 3,
+  );
+}
+
+/**
+ * Get labeled field results of a view, as an efficient alternative to render().
+ *
+ * This function exists because using render() to get labels from
+ * $view->style_plugin->rendered_fields is very taxing on 10000+ rows.
+ *
+ * @param object $view
+ *   A view.
+ *
+ * @return array
+ *   An array, containing:
+ *     - labels: An array of field labels, keyed by field_alias.
+ *     - rows: An array of view result row objects. This is exactly like what
+ *       views_get_view_result() returns, except these are keyed by field_alias
+ *       so labels can be matched to results without render().
+ */
+function highcharts_views_get_view_result($view) {
+  $result = array();
+
+  if ($view->result) {
+    // Get labels. This is the entire reason for this function - otherwise we
+    // would just use views_get_view_result().
+    if (!empty($view->field)) {
+      foreach ($view->field as $key => $field) {
+        $field_alias = $field->field_alias;
+        $labels[$field_alias] = $field->options['label'];
+      }
+    }
+
+    // Create or add to the result array, keyed for static caching.
+    $result = array(
+      'labels' => $labels,
+      'rows' => $view->result,
+    );
+  }
+  else {
+    // Return an empty array of labels and rows if the view does not execute.
+    $result = array(
+      'labels' => array(),
+      'rows' => array(),
+    );
+  }
+
+  return $result;
+}
+
+/**
+ * Recursively override values in a tree of objects with values in an array tree
+ * of the same structure.
+ *
+ * Note that only objects within the original tree will be overridden, because
+ * arrays within the Highcharts options object tree should not be overridden by
+ * Views configs.
+ *
+ * @param object $original
+ *   A Highcharts options object tree to be overridden.
+ * @param array $override
+ *   An array tree which will override an original of the same tree structure.
+ *
+ * @return
+ *   An overridden Highcharts options object tree.
+ */
+function highcharts_views_options_override($original, $override) {
+  if (is_array($override) && (is_object($original) || is_null($original))) {
+    foreach ($override as $key => $value) {
+      $merged = highcharts_views_options_override($original->{$key}, $value);
+      if (!is_null($merged)) {
+        $original->{$key} = $merged;
+      }
+    }
+  }
+  // Only override the original if the piece we're looking at is not an array,
+  // and if override value is not empty.
+  elseif (!empty($override) && !is_array($original)) {
+    return $override;
+  }
+
+  return $original;
+}

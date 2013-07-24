@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the VRC Link Checker feature.
+ */
+
+include_once 'vrc_link_checker.features.inc';

@@ -1,0 +1,61 @@
+<?php
+/**
+ * @file
+ * Provides the Raphaël JavaScript vector graphics library to other modules.
+ *
+ * This module does not do a lot on its own, but it is a centralised way
+ * to load the Raphaël files for use by multiple modules, and may in
+ * time grow to have helper functions for using Raphaël on your page.
+ */
+
+/**
+ * Implements hook_libraries_info().
+ */
+function raphael_libraries_info() {
+  $libraries = array(
+    'raphael' => array(
+      'name' => 'Raphaël',
+      'vendor url' => 'http://raphaeljs.com/',
+      'download url' => 'http://raphaeljs.com/',
+      'version arguments' => array(
+        'file' => 'history.md',
+        'pattern' => '/^([0-9a-zA-Z.-]+)\ /',
+      ),
+      'files' => array(
+        'js' => array(
+          'raphael.js',
+        ),
+      ),
+      'variants' => array(
+        'minified' => array(
+          'js' => array(
+            'raphael-min.js',
+          ),
+        ),
+      ),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Load Raphaël on a page.
+ *
+ * This function is deprecated, you should use libraries_load() in its place.
+ *
+ * @param boolean $minified
+ *   Whether to load the minified or the uncompressed version. Default
+ *   is TRUE for loading the minified version.
+ */
+function raphael_add($minified = TRUE) {
+  static $raphael_loaded;
+
+  if (!$raphael_loaded) {
+    if ($minified) {
+      libraries_load('raphael', 'minified');
+    }
+    else {
+      libraries_load('raphael');
+    }
+  }
+}

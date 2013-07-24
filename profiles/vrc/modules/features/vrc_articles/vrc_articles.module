@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Articles content feature.
+ */
+
+include_once 'vrc_articles.features.inc';
