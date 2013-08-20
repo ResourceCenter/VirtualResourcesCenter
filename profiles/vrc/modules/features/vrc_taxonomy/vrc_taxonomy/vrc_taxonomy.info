@@ -7,7 +7,6 @@ version = 7.x-1.0
 project = vrc_taxonomy
 dependencies[] = features
 dependencies[] = taxonomy
-dependencies[] = text
 dependencies[] = views
 dependencies[] = vrc_documentation
 features[ctools][] = views:views_default:3.0
