@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the vrc_taxonomy feature.
- */
-
-include_once 'vrc_taxonomy.features.inc';
